@@ -1,0 +1,40 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file='core.lua' />
+
+    <Script file='units\prototype_party.lua' />
+
+    <Script file='units\common.lua' />
+    <Script file='units\player_target.lua' />
+    <Script file='units\player.lua' />
+    <Script file='units\target.lua' />
+    <Script file='units\pet.lua' />
+    <Script file='units\pettarget.lua' />
+    <Script file='units\focus.lua' />
+    <Script file='units\focus_target.lua' />
+    <Script file='units\tot.lua' />
+    <Script file='units\totot.lua' />
+    <Script file='units\party.lua' />
+    <Script file='units\raid.lua' />
+    <Script file='units\boss.lua' />
+    <Script file='units\arena.lua' />
+
+
+	<!--
+		This template requires the layout to set the anchoring positions from the
+		sub-frame(s). These are feed to the layouts style functions as any other unit
+		spawned by a header. The main difference is that they have the unitsuffix
+		attribute set (and they are parented to their respective owener).
+	<Button name="oUF_HeaderTargetTemplate" inherits="SecureUnitButtonTemplate" hidden="true" virtual="true">
+		<Frames>
+			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+				<Attributes>
+					<Attribute name="unitsuffix" type="string" value="target"/>
+					<Attribute name="useparent-unit" type="boolean" value="true"/>
+					<Attribute name="type1" type="string" value="target"/>
+					<Attribute name="initial-unitWatch" type="boolean" value="true"/>
+				</Attributes>
+			</Button>
+		</Frames>
+	</Button>
+	-->
+</Ui>

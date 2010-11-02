@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file='utils.lua' />
+    <Script file='colors.lua' />
+    <Script file='tags.lua' />
+    <Script file='raid_debuff_data.lua' />
+</Ui>

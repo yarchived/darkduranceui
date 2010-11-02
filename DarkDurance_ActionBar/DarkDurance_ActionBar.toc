@@ -1,0 +1,17 @@
+## Interface: 40000
+## Title: DarkDurance ActionBar
+## Author: yleaf
+## Version: alpha
+
+core.lua
+
+modules\barframe.lua
+modules\actionbar.lua
+modules\stancebar.lua
+modules\petbar.lua
+modules\vehiclebar.lua
+modules\skin.lua
+modules\speedy.lua
+modules\bonusbar.lua
+
+layout.lua

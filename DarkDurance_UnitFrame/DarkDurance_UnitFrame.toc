@@ -1,0 +1,36 @@
+## Interface: 30300
+## Title: DarkDurance UnitFrame
+## OptionalDeps: !ClassColors
+## Notes: An awesome unit frame using oUF
+## Version: unstable
+## Author:
+## SavedVariables: DarkDuranceDB
+## License: See each file for details
+## X-oUF: DarkDurance_oUF
+## X-Website: http://code.google.com/p/darkduranceui/
+## X-Email: darkduranceui@googlegroups.com
+## X-Discuss: http://groups.google.com/group/darkduranceui
+
+# Libraries
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\SuckLessStatusBar-1.0\lib.xml
+
+# namespace
+core.lua
+
+# modified oUF core
+oUF\oUF.xml
+
+# configuration
+config.lua
+
+# utilities
+utils\utils.xml
+
+# plugins
+plugins\plugins.xml
+
+# layout
+layouts\layouts.xml
+
