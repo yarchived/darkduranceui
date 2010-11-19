@@ -1,26 +1,6 @@
 #!/bin/sh
 
 pkgname='DarkDuranceUI'
-
-# clean up old file
-echo '>>> Cleaning up old files ...'
-rm ${pkgname} -rf
 rm ${pkgname}.7z
-mkdir ${pkgname}
-
-echo '>>> Checking out files ...'
-for folder in `ls .. | grep 'DarkDurance_'`; do
-    echo '    exporting' ${folder}
-    svn export ../${folder} ${pkgname}/${folder} > /dev/null
-done
-
-
-echo '>>> Packing files ...'
-7z a ${pkgname}.7z $pkgname > /dev/null
-
-echo '>>> Remove left overs ...'
-rm ${pkgname} -rf # clean up
-
-echo '>>> DONE <<<'
-
+7z a ${pkgname}.7z DarkDurance_*
 
