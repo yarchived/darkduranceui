@@ -1,7 +1,6 @@
 local parent, ns = ...
 local oUF = ns.oUF
 
-local printed = false
 local Update = function(self, event, unit)
 	if(event == 'VehicleSwitch') then return end
 
