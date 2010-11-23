@@ -48,7 +48,7 @@ end
 
 local function onUpdate(self, elapsed)
     self.nextUpdate = self.nextUpdate - elapsed
-    if(self.nextUpdate < 0) then
+    if(self.nextUpdate <= 0) then
         updateDuration(self)
     end
     if(BuffFrame.BuffFrameUpdateTime> 0) then
