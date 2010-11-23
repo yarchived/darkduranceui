@@ -16,8 +16,8 @@ tags.lvl = '[difficulty][level]|r'
 for i = 1, 10 do
     local token = 'name' .. i
     tags[token] = '[raidcolor][' .. token .. ']|r'
-    oUF.Tags[token] = function(u)
-        local n = UnitName(u)
+    oUF.Tags[token] = function(u, r)
+        local n = UnitName(r or u)
         if(not n) then return end
 
         if(strbyte(n,1) > 224) then
@@ -26,6 +26,7 @@ for i = 1, 10 do
             return utils.utf8sub(n, i*2)
         end
     end
+    oUF.TagEvents[token] = oUF.TagEvents.name
 end
 
 oUF.Tags.difficulty = [=[function(u)
