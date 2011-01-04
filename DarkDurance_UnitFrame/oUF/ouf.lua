@@ -290,8 +290,16 @@ for k, v in pairs{
 		local unit = self.unit
 		if(not UnitExists(unit)) then return end
 
+		if(self.PreUpdate) then
+			self:PreUpdate(event)
+		end
+
 		for _, func in next, self.__elements do
 			func(self, event, unit)
+		end
+
+		if(self.PostUpdate) then
+			self:PostUpdate(event)
 		end
 	end,
 } do
@@ -399,6 +407,8 @@ local initObject = function(unit, style, styleFunc, header, ...)
 			object:SetAttribute('*type2', 'menu')
 
 			object:SetAttribute('toggleForVehicle', true)
+		else
+			object:RegisterEvent('PARTY_MEMBERS_CHANGED', object.UpdateAllElements)
 		end
 		object.style = style
 
@@ -552,7 +562,9 @@ local generateName = function(unit, ...)
 	local append
 	if(raid) then
 		if(groupFilter) then
-			if(groupFilter:match'TANK') then
+			if(type(groupFilter) == 'number' and groupFilter > 0) then
+				append = groupFilter
+			elseif(groupFilter:match'TANK') then
 				append = 'MainTank'
 			elseif(groupFilter:match'ASSIST') then
 				append =  'MainAssist'

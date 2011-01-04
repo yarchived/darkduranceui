@@ -82,7 +82,7 @@ end
 
 local updateIcon = function(unit, icons, index, offset, filter, isDebuff, max)
 	local name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID = UnitAura(unit, index, filter)
-	--name, rank, texture, count, dtype, duration, timeLeft, caster = 'Curse of Doom', 'Rank 2', 'Interface\\Icons\\Ability_Druid_CatForm', 5, 0, 0, 60, 'player'
+	--name, rank, texture, count, dtype, duration, timeLeft, caster = 'Curse of Doom', 'Rank 2', 'Interface\\Icons\\Ability_Druid_CatForm', 5, nil, 0, 60, 'player'
 	if(name) then
 		local icon = icons[index + offset]
 		if(not icon) then
