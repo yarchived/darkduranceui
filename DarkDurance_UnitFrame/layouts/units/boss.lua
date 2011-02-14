@@ -3,7 +3,12 @@ local addonName, ns = ...
 local addon = ns[addonName]
 local oUF = ns.oUF
 
-addon:spawn(function()
+local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES
 
-    --MAX_BOSS_FRAMES
+addon:spawn(function(self, unit)
+
 end)
+
+
+
+

@@ -34,3 +34,4 @@ plugins\plugins.xml
 # layout
 layouts\layouts.xml
 
+_test.lua
