@@ -14,11 +14,11 @@ local UpdatePower = function(self, event, unit, powerType)
 
 	local barType, min = UnitAlternatePowerInfo(unit)
 	local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
-	local max = UnitPowerMax(self.unit, ALTERNATE_POWER_INDEX)
+	local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
 
 	altpowerbar.barType = barType
-	altpowerbar:SetValue(cur)
 	altpowerbar:SetMinMaxValues(min, max)
+	altpowerbar:SetValue(cur)
 
 	if(altpowerbar.PostUpdate) then
 		return altpowerbar:PostUpdate(min, cur, max)
@@ -38,13 +38,7 @@ local Toggler = function(self, event, unit)
 		self:RegisterEvent('UNIT_POWER', UpdatePower)
 		self:RegisterEvent('UNIT_MAXPOWER', UpdatePower)
 
-		local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
-		local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
-
-		altpowerbar.barType = barType
-		altpowerbar:SetMinMaxValues(minPower, max)
-		altpowerbar:SetValue(cur)
-
+		ForceUpdate(altpowerbar)
 		altpowerbar:Show()
 	else
 		self:UnregisterEvent('UNIT_POWER', UpdatePower)
@@ -65,9 +59,11 @@ local Enable = function(self, unit)
 
 		altpowerbar:Hide()
 
-		PlayerPowerBarAlt:UnregisterEvent'UNIT_POWER_BAR_SHOW'
-		PlayerPowerBarAlt:UnregisterEvent'UNIT_POWER_BAR_HIDE'
-		PlayerPowerBarAlt:UnregisterEvent'PLAYER_ENTERING_WORLD'
+		if(unit == 'player') then
+			PlayerPowerBarAlt:UnregisterEvent'UNIT_POWER_BAR_SHOW'
+			PlayerPowerBarAlt:UnregisterEvent'UNIT_POWER_BAR_HIDE'
+			PlayerPowerBarAlt:UnregisterEvent'PLAYER_ENTERING_WORLD'
+		end
 
 		return true
 	end
@@ -79,9 +75,11 @@ local Disable = function(self, unit)
 		self:UnregisterEvent('UNIT_POWER_BAR_SHOW', Toggler)
 		self:UnregisterEvent('UNIT_POWER_BAR_HIDE', Toggler)
 
-		PlayerPowerBarAlt:RegisterEvent'UNIT_POWER_BAR_SHOW'
-		PlayerPowerBarAlt:RegisterEvent'UNIT_POWER_BAR_HIDE'
-		PlayerPowerBarAlt:RegisterEvent'PLAYER_ENTERING_WORLD'
+		if(unit == 'player') then
+			PlayerPowerBarAlt:RegisterEvent'UNIT_POWER_BAR_SHOW'
+			PlayerPowerBarAlt:RegisterEvent'UNIT_POWER_BAR_HIDE'
+			PlayerPowerBarAlt:RegisterEvent'PLAYER_ENTERING_WORLD'
+		end
 	end
 end
 

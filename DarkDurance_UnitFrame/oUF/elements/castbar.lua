@@ -54,9 +54,8 @@ local UNIT_SPELLCAST_START = function(self, event, unit, spell)
 		sf:SetPoint'BOTTOM'
 	end
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostCastStart) then
-		castbar:PostCastStart(unit, name, nil, castid)
+		castbar:PostCastStart(unit, name, castid)
 	end
 	castbar:Show()
 end
@@ -74,9 +73,8 @@ local UNIT_SPELLCAST_FAILED = function(self, event, unit, spellname, _, castid)
 	castbar:SetValue(0)
 	castbar:Hide()
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostCastFailed) then
-		return castbar:PostCastFailed(unit, spellname, nil, castid)
+		return castbar:PostCastFailed(unit, spellname, castid)
 	end
 end
 
@@ -93,9 +91,8 @@ local UNIT_SPELLCAST_INTERRUPTED = function(self, event, unit, spellname, _, cas
 	castbar:SetValue(0)
 	castbar:Hide()
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostCastInterrupted) then
-		return castbar:PostCastInterrupted(unit, spellname, nil, castid)
+		return castbar:PostCastInterrupted(unit, spellname, castid)
 	end
 end
 
@@ -142,9 +139,8 @@ local UNIT_SPELLCAST_DELAYED = function(self, event, unit, spellname, _, castid)
 
 	castbar:SetValue(duration)
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostCastDelayed) then
-		return castbar:PostCastDelayed(unit, name, nil, castid)
+		return castbar:PostCastDelayed(unit, name, castid)
 	end
 end
 
@@ -161,9 +157,8 @@ local UNIT_SPELLCAST_STOP = function(self, event, unit, spellname, _, castid)
 	castbar:SetValue(0)
 	castbar:Hide()
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostCastStop) then
-		return castbar:PostCastStop(unit, spellname, nil, castid)
+		return castbar:PostCastStop(unit, spellname, castid)
 	end
 end
 
@@ -187,6 +182,12 @@ local UNIT_SPELLCAST_CHANNEL_START = function(self, event, unit, spellname)
 	castbar.channeling = true
 	castbar.interrupt = interrupt
 
+	-- We have to do this, as it's possible for spell casts to never have _STOP
+	-- executed or be fully completed by the OnUpdate handler before CHANNEL_START
+	-- is called.
+	castbar.casting = nil
+	castbar.castid = nil
+
 	castbar:SetMinMaxValues(0, max)
 	castbar:SetValue(duration)
 
@@ -209,7 +210,6 @@ local UNIT_SPELLCAST_CHANNEL_START = function(self, event, unit, spellname)
 		sf:SetPoint'BOTTOM'
 	end
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostChannelStart) then castbar:PostChannelStart(unit, name) end
 	castbar:Show()
 end
@@ -232,7 +232,6 @@ local UNIT_SPELLCAST_CHANNEL_UPDATE = function(self, event, unit, spellname)
 	castbar:SetMinMaxValues(0, castbar.max)
 	castbar:SetValue(duration)
 
-	--- XXX: 1.6: Kill the rank field.
 	if(castbar.PostChannelUpdate) then
 		return castbar:PostChannelUpdate(unit, name)
 	end
@@ -249,7 +248,6 @@ local UNIT_SPELLCAST_CHANNEL_STOP = function(self, event, unit, spellname)
 		castbar:SetValue(castbar.max)
 		castbar:Hide()
 
-		--- XXX: 1.6: Kill the rank field.
 		if(castbar.PostChannelStop) then
 			return castbar:PostChannelStop(unit, spellname)
 		end
@@ -269,7 +267,7 @@ local onUpdate = function(self, elapsed)
 
 		if(self.SafeZone) then
 			local width = self:GetWidth()
-			local _, _, ms = GetNetStats()
+			local _, _, _, ms = GetNetStats()
 			-- MADNESS!
 			local safeZonePercent = (width / self.max) * (ms / 1e5)
 			if(safeZonePercent > 1) then safeZonePercent = 1 end
@@ -311,7 +309,7 @@ local onUpdate = function(self, elapsed)
 
 		if(self.SafeZone) then
 			local width = self:GetWidth()
-			local _, _, ms = GetNetStats()
+			local _, _, _, ms = GetNetStats()
 			-- MADNESS!
 			local safeZonePercent = (width / self.max) * (ms / 1e5)
 			if(safeZonePercent > 1) then safeZonePercent = 1 end
@@ -341,7 +339,10 @@ local onUpdate = function(self, elapsed)
 		end
 	else
 		self.unitName = nil
+		self.casting = nil
+		self.castid = nil
 		self.channeling = nil
+
 		self:SetValue(1)
 		self:Hide()
 	end
@@ -388,7 +389,7 @@ local Enable = function(object, unit)
 			PetCastingBarFrame:Hide()
 		end
 
-		if(not castbar:GetStatusBarTexture()) then
+		if(castbar:IsObjectType'StatusBar' and not castbar:GetStatusBarTexture()) then
 			castbar:SetStatusBarTexture[[Interface\TargetingFrame\UI-StatusBar]]
 		end
 

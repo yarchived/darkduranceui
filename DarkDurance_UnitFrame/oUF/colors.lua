@@ -5,11 +5,6 @@ local Private = oUF.Private
 local frame_metatable = Private.frame_metatable
 
 local colors = {
-	happiness = {
-		[1] = {1, 0, 0}, -- need.... | unhappy
-		[2] = {1, 1, 0}, -- new..... | content
-		[3] = {0, 1, 0}, -- colors.. | happy
-	},
 	smooth = {
 		1, 0, 0,
 		1, 1, 0,
@@ -29,11 +24,8 @@ if(IsAddOnLoaded'!ClassColors' and CUSTOM_CLASS_COLORS) then
 			colors.class[eclass] = {color.r, color.g, color.b}
 		end
 
-		local oUF = ns.oUF or _G[parent]
-		if(oUF) then
-			for _, obj in next, oUF.objects do
-				obj:UpdateAllElements("CUSTOM_CLASS_COLORS")
-			end
+		for _, obj in next, oUF.objects do
+			obj:UpdateAllElements("CUSTOM_CLASS_COLORS")
 		end
 	end
 

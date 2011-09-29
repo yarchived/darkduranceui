@@ -5,7 +5,7 @@ local VISIBLE = 1
 local HIDDEN = 0
 
 local UpdateTooltip = function(self)
-	GameTooltip:SetUnitAura(self.parent:GetParent().unit, self:GetID(), self.filter)
+	GameTooltip:SetUnitAura(self:GetParent().__owner.unit, self:GetID(), self.filter)
 end
 
 local OnEnter = function(self)
@@ -56,7 +56,6 @@ local createAuraIcon = function(icons, index)
 
 	table.insert(icons, button)
 
-	button.parent = icons
 	button.icon = icon
 	button.count = count
 	button.cd = cd
@@ -82,7 +81,6 @@ end
 
 local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visible)
 	local name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff = UnitAura(unit, index, filter)
-	--name, rank, texture, count, dtype, duration, timeLeft, caster = 'Curse of Doom', 'Rank 2', 'Interface\\Icons\\Ability_Druid_CatForm', 5, nil, 0, 60, 'player'
 	if(name) then
 		local n = visible + offset + 1
 		local icon = icons[n]
@@ -114,14 +112,11 @@ local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visibl
 				icon.overlay:Hide()
 			end
 
-			-- XXX: Avoid popping errors on layouts without icon.stealable.
-			if(icon.stealable) then
-				local stealable = not isDebuff and isStealable
-				if(stealable and icons.showStealableBuffs and not UnitIsUnit('player', unit)) then
-					icon.stealable:Show()
-				else
-					icon.stealable:Hide()
-				end
+			local stealable = not isDebuff and isStealable
+			if(stealable and icons.showStealableBuffs and not UnitIsUnit('player', unit)) then
+				icon.stealable:Show()
+			else
+				icon.stealable:Hide()
 			end
 
 			icon.icon:SetTexture(texture)

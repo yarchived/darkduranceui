@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 40000
 ## Title: DarkDurance UnitFrame
 ## OptionalDeps: !ClassColors
 ## Notes: An awesome unit frame using oUF
@@ -34,4 +34,3 @@ plugins\plugins.xml
 # layout
 layouts\layouts.xml
 
-_test.lua
