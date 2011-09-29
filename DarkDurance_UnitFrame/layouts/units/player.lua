@@ -1,4 +1,4 @@
--- This file is hereby placed in the Public Domain
+
 local addonName, ns = ...
 local addon = ns[addonName]
 local oUF = ns.oUF
@@ -93,10 +93,6 @@ addon:addLayoutElement('player', function(self, unit)
     ass:SetPoint('CENTER', leader)
 end)
 
-
-
-
-
 local _, class = UnitClass'player'
 addon:addLayoutElement('player', class == 'DEATHKNIGHT' and function(self, unit)
     local runes = CreateFrame('Frame', nil, self.Power)
@@ -127,7 +123,4 @@ addon:addLayoutElement('player', class == 'DEATHKNIGHT' and function(self, unit)
         bar.bg.multiplier = .5
     end
 end)
-
-
-
 

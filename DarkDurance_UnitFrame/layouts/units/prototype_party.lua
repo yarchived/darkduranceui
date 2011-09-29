@@ -1,8 +1,8 @@
--- This file is hereby placed in the Public Domain
+
 local addonName, ns = ...
 local addon = ns[addonName]
 local oUF = ns.oUF
-local libstatusbar = LibStub('SuckLessStatusBar-1.0')
+--local libstatusbar = LibStub('SuckLessStatusBar-1.0')
 local utils = addon.utils
 
 ns.style_party = function(self, unit)
@@ -20,7 +20,8 @@ ns.style_party = function(self, unit)
 
     local WIDTH, HEIGHT = 44, 86
 
-    local hp = libstatusbar:NewStatusBar(nil, self)
+    --local hp = libstatusbar:NewStatusBar(nil, self)
+    local hp = CreateFrame('StatusBar', nil, self)
     hp:SetStatusBarTexture(utils.mediaPath .. 'PartyHealth')
     hp:SetOrientation('VERTICAL')
     self.Health = hp
@@ -34,7 +35,8 @@ ns.style_party = function(self, unit)
     hp.bg:SetTexture(utils.mediaPath .. 'PartyHealth')
     hp.bg.multiplier = ns.colorMultiplier
 
-    local mp = libstatusbar:NewStatusBar(nil, self)
+    --local mp = libstatusbar:NewStatusBar(nil, self)
+    local mp = CreateFrame('StatusBar', nil, self)
     mp:SetStatusBarTexture(utils.mediaPath .. 'PartyHealth')
     mp:SetOrientation('VERTICAL')
     mp:SetReverse(true)

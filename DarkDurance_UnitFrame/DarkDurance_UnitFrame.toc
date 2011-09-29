@@ -16,7 +16,7 @@
 # Libraries
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
-libs\SuckLessStatusBar-1.0\lib.xml
+#libs\SuckLessStatusBar-1.0\lib.xml
 
 # namespace
 core.lua

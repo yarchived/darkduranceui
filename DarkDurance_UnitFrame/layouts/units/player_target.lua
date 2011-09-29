@@ -1,8 +1,8 @@
--- This file is hereby placed in the Public Domain
+
 local addonName, ns = ...
 local addon = ns[addonName]
 local oUF = ns.oUF
-local libstatusbar = LibStub('SuckLessStatusBar-1.0')
+--local libstatusbar = LibStub('SuckLessStatusBar-1.0')
 
 local utils = addon.utils
 local units = {'player', 'target'}
@@ -38,8 +38,8 @@ local function func(self, unit)
     end
     self.Portrait = portrait
 
-    --local hp = CreateFrame('StatusBar', nil, self)
-    local hp = libstatusbar:NewStatusBar(nil, self)
+    local hp = CreateFrame('StatusBar', nil, self)
+    --local hp = libstatusbar:NewStatusBar(nil, self)
     self.Health = hp
     do
         local xOffset, yOffset = 80, 38
@@ -101,7 +101,8 @@ local function func(self, unit)
     mp.bg:SetTexture(utils.mediaPath .. 'PowerBar')
     mp.bg.multiplier = ns.colorMultiplier
 
-    local caster = libstatusbar:NewStatusBar(nil, self)
+    --local caster = libstatusbar:NewStatusBar(nil, self)
+    local caster = CreateFrame('StatusBar', nil, self)
     caster:SetStatusBarTexture(utils.mediaPath .. 'StatusBar1')
     caster:SetStatusBarColor(0, 159/255, 233/255)
     self.Castbar = caster
