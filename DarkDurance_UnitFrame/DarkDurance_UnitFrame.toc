@@ -5,7 +5,9 @@
 ## Version: unstable
 ## Author:
 ## SavedVariables: DarkDuranceDB
-## License: See each file for details
+## X-SavedVariables: DarkDuranceDB
+## X-SlashCmdList: /dd, /darkdurance
+
 ## X-oUF: DarkDurance_oUF
 ## X-Website: http://code.google.com/p/darkduranceui/
 ## X-Email: darkduranceui@googlegroups.com

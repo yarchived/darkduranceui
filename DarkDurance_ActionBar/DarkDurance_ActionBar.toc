@@ -3,15 +3,15 @@
 ## Author: yleaf
 ## Version: alpha
 
-core.lua
-
-modules\barframe.lua
-modules\actionbar.lua
-modules\stancebar.lua
-modules\petbar.lua
-modules\vehiclebar.lua
-modules\skin.lua
-modules\speedy.lua
-modules\bonusbar.lua
-
-layout.lua
+#core.lua
+#
+#modules\barframe.lua
+#modules\actionbar.lua
+#modules\stancebar.lua
+#modules\petbar.lua
+#modules\vehiclebar.lua
+#modules\skin.lua
+#modules\speedy.lua
+#modules\bonusbar.lua
+#
+#layout.lua
