@@ -1,6 +1,0 @@
-#!/bin/sh
-
-pkgname='DarkDuranceUI'
-rm ${pkgname}.7z
-7z a ${pkgname}.7z DarkDurance_*
-
