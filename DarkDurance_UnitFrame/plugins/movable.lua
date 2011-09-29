@@ -1,26 +1,31 @@
-local _, ns = ...
-local oUF = ns.oUF or oUF
+local _NAME, _NS = ...
+local oUF = _NS.oUF or oUF
 
 assert(oUF, "oUF_MovableFrames was unable to locate oUF install.")
 
 -- The DB is organized as the following:
 -- {
 --    Lily = {
---       player = "CENTER\031UIParent\0310\031-621",
+--       player = "CENTER\031UIParent\0310\031-621\0310.8",
 -- }
 --}
 local _DB
+local _DBNAME = GetAddOnMetadata(_NAME, 'X-SavedVariables')
 local _LOCK
+local _TITLE = GetAddOnMetadata(_NAME, 'title')
 
 local _BACKDROP = {
 	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background";
 }
 
+-- I could use the title field in the TOC, but people tend to put color and
+-- other shit there, so we'll just use the folder name:
+local slashGlobal = _NAME:gsub('%s+', '_'):gsub('[^%a%d_]+', ''):upper()
+slashGlobal = slashGlobal .. '_OMF'
+
+local print_fmt = string.format('|cff33ff99%s:|r', _TITLE)
 local print = function(...)
-	return print('|cff33ff99oUF_MovableFrames:|r', ...)
-end
-local round = function(n)
-	return math.floor(n * 1e5 + .5) / 1e5
+	return print(print_fmt, ...)
 end
 
 local backdropPool = {}
@@ -33,8 +38,8 @@ local getPoint = function(obj, anchor)
 		-- Frame doesn't really have a positon yet.
 		if(not Ox) then return end
 
-		local UIS = UIParent:GetEffectiveScale()
-		local OS = obj:GetEffectiveScale()
+		local OS = obj:GetScale()
+		Ox, Oy = Ox * OS, Oy * OS
 
 		local UIWidth, UIHeight = UIParent:GetRight(), UIParent:GetTop()
 
@@ -67,15 +72,15 @@ local getPoint = function(obj, anchor)
 		end
 
 		return string.format(
-			'%s\031%s\031%d\031%d',
-			point, 'UIParent', round(x * UIS / OS),  round(y * UIS / OS)
+			'%s\031%s\031%d\031%d\031\%.3f',
+			point, 'UIParent', x,  y, OS
 		)
 	else
 		local point, parent, _, x, y = anchor:GetPoint()
 
 		return string.format(
-			'%s\031%s\031%d\031%d',
-			point, 'UIParent', round(x), round(y)
+			'%s\031%s\031%d\031%d\031\%.3f',
+			point, 'UIParent', x, y, obj:GetScale()
 		)
 	end
 end
@@ -122,14 +127,14 @@ local restoreDefaultPosition = function(style, identifier)
 	end
 
 	if(obj) then
-		local scale = obj:GetScale()
 		local target = isHeader or obj
-		local SetPoint = getmetatable(target).__index.SetPoint;
 
 		target:ClearAllPoints()
+		local point, parentName, x, y, scale = string.split('\031', _DB.__INITIAL[style][identifier])
+		if(not scale) then scale = 1 end
 
-		local point, parentName, x, y = string.split('\031', _DB.__INITIAL[style][identifier])
-		SetPoint(target, point, parentName, point, x / scale, y / scale)
+		target:_SetScale(scale)
+		target:_SetPoint(point, parentName, point, x, y)
 
 		local backdrop = backdropPool[target]
 		if(backdrop) then
@@ -151,20 +156,37 @@ local function restorePosition(obj)
 	-- We've not saved any custom position for this style.
 	if(not _DB[style] or not _DB[style][identifier]) then return end
 
-	local scale = obj:GetScale()
 	local target = isHeader or obj
-	local SetPoint = getmetatable(target).__index.SetPoint;
-
-	-- Hah, a spot you have to use semi-colon!
-	-- Guess I've never experienced that as these are usually wrapped in do end
-	-- statements.
-	target.SetPoint = restorePosition;
+	if(not target._SetPoint) then
+		target._SetPoint = target.SetPoint
+		target.SetPoint = restorePosition
+		target._SetScale = target.SetScale
+		target.SetScale = restorePosition
+	end
 	target:ClearAllPoints()
 
 	-- damn it Blizzard, _how_ did you manage to get the input of this function
 	-- reversed. Any sane person would implement this as: split(str, dlm, lim);
-	local point, parentName, x, y = string.split('\031', _DB[style][identifier])
-	SetPoint(target, point, parentName, point, x / scale, y / scale)
+	local point, parentName, x, y, scale = string.split('\031', _DB[style][identifier])
+	if(not scale) then
+		scale = 1
+	end
+
+	if(scale) then
+		target:_SetScale(scale)
+	else
+		scale = target:GetScale()
+	end
+	target:_SetPoint(point, parentName, point, x / scale, y / scale)
+end
+
+local restoreCustomPosition = function(style, ident)
+	for _, obj in next, oUF.objects do
+		local objStyle, objIdent = getObjectInformation(obj)
+		if(objStyle == style and objIdent == ident) then
+			return restorePosition(obj)
+		end
+	end
 end
 
 local saveDefaultPosition = function(obj)
@@ -196,6 +218,16 @@ local savePosition = function(obj, anchor)
 	_DB[style][identifier] = getPoint(isHeader or obj, anchor)
 end
 
+local saveCustomPosition = function(style, ident, point, x, y, scale)
+	-- Shouldn't really be the case, but you never know!
+	if(not _DB[style]) then _DB[style] = {} end
+
+	_DB[style][ident] = string.format(
+		'%s\031%s\031%d\031%d\031\%.3f',
+		point, 'UIParent', x,  y, scale
+	)
+end
+
 -- Attempt to figure out a more sane name to dispaly.
 local smartName
 do
@@ -212,6 +244,14 @@ do
 		'arena',
 	}
 
+	local rewrite = {
+		mt = 'maintank',
+		mtt = 'maintanktarget',
+
+		ma = 'mainassist',
+		mat = 'mainassisttarget',
+	}
+
 	local validName = function(smartName)
 		-- Not really a valid name, but we'll accept it for simplicities sake.
 		if(tonumber(smartName)) then
@@ -219,8 +259,11 @@ do
 		end
 
 		if(type(smartName) == 'string') then
-			if(smartName == 'mt') then
-				return 'maintank'
+			-- strip away trailing s from pets, but don't touch boss/focus.
+			smartName = smartName:gsub('([^us])s$', '%1')
+
+			if(rewrite[smartName]) then
+				return rewrite[smartName]
 			end
 
 			for _, v in next, validNames do
@@ -265,7 +308,13 @@ do
 		end
 
 		-- Here comes the substitute train!
-		local n = name:gsub('(%l)(%u)', '%1_%2'):gsub('([%l%u])(%d)', '%1_%2_'):lower()
+		local n = name
+			:gsub('ToT', 'targettarget')
+			:gsub('(%l)(%u)', '%1_%2')
+			:gsub('([%l%u])(%d)', '%1_%2_')
+			:gsub('Main_', 'Main')
+			:lower()
+
 		n = guessName(string.split('_', n))
 		if(n) then
 			nameCache[name] = n
@@ -299,11 +348,26 @@ do
 
 	function frame:VARIABLES_LOADED()
 		-- I honestly don't trust the load order of SVs.
-		_DB = DarkDuranceDB or {}
-		DarkDuranceDB = _DB
+		_DB = _G[_DBNAME] or {}
+		_G[_DBNAME] = _DB
 		-- Got to catch them all!
 		for _, obj in next, oUF.objects do
 			restorePosition(obj)
+		end
+
+		-- Clean up the defaults DB:
+		if(_DB.__INITIAL) then
+			for layout, frames in next, _DB.__INITIAL do
+				if(not _DB[layout])  then
+					_DB.__INITIAL[layout] = nil
+				else
+					for frame in next, frames do
+						if(not _DB[layout][frame]) then
+							_DB.__INITIAL[layout][frame] = nil
+						end
+					end
+				end
+			end
 		end
 
 		oUF:RegisterInitCallback(restorePosition)
@@ -329,6 +393,16 @@ do
 		return self.name:SetText(smartName(self.obj, self.header))
 	end
 
+	local OnHide = function(self)
+		if(self.dirtyMinHeight) then
+			self:SetAttribute('minHeight', nil)
+		end
+
+		if(self.dirtyMinWidth) then
+			self:SetAttribute('minWidth', nil)
+		end
+	end
+
 	local OnDragStart = function(self)
 		saveDefaultPosition(self.obj)
 		self:StartMoving()
@@ -341,6 +415,47 @@ do
 	local OnDragStop = function(self)
 		self:StopMovingOrSizing()
 		savePosition(self.obj, self)
+
+		-- Restore the initial anchoring, so the anchor follows the frame when we
+		-- edit positions through the UI.
+		restorePosition(self.obj)
+		self:ClearAllPoints()
+		self:SetAllPoints(self.header or self.obj)
+	end
+
+	local OnMouseDown = function(self)
+		local anchor = self:GetParent()
+		saveDefaultPosition(anchor.obj)
+		anchor:StartSizing('BOTTOMRIGHT')
+
+		local frame = anchor.header or anchor.obj
+		frame:ClearAllPoints()
+		frame:SetAllPoints(anchor)
+
+		self:SetButtonState("PUSHED", true)
+	end
+
+	local OnMouseUp = function(self)
+		local anchor = self:GetParent()
+		self:SetButtonState("NORMAL", false)
+
+		anchor:StopMovingOrSizing()
+		savePosition(anchor.obj, anchor)
+	end
+
+	local OnSizeChanged = function(self, width, height)
+		local baseWidth, baseHeight = self.baseWidth, self.baseHeight
+
+		local scale = width / baseWidth
+
+		-- This is damn tiny!
+		if(scale <= .3) then
+			scale = .3
+		end
+
+		self:SetSize(scale * baseWidth, scale * baseHeight)
+		local target = self. target;
+		(target._SetScale or target.SetScale) (target, scale)
 	end
 
 	getBackdrop = function(obj, isHeader)
@@ -358,9 +473,8 @@ do
 
 		backdrop:EnableMouse(true)
 		backdrop:SetMovable(true)
+		backdrop:SetResizable(true)
 		backdrop:RegisterForDrag"LeftButton"
-
-		backdrop:SetScript("OnShow", OnShow)
 
 		local name = backdrop:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 		name:SetPoint"CENTER"
@@ -368,21 +482,60 @@ do
 		name:SetFont(GameFontNormal:GetFont(), 12)
 		name:SetTextColor(1, 1, 1)
 
+		local scale = CreateFrame('Button', nil, backdrop)
+		scale:SetPoint'BOTTOMRIGHT'
+		scale:SetSize(16, 16)
+
+		scale:SetNormalTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up]]
+		scale:SetHighlightTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight]]
+		scale:SetPushedTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down]]
+
+		scale:SetScript('OnMouseDown', OnMouseDown)
+		scale:SetScript('OnMouseUp', OnMouseUp)
+
 		backdrop.name = name
 		backdrop.obj = obj
 		backdrop.header = isHeader
+		backdrop.target = target
 
 		backdrop:SetBackdropBorderColor(0, .9, 0)
 		backdrop:SetBackdropColor(0, .9, 0)
 
-		-- Work around the fact that headers with no units displayed are 0 in height.
-		if(isHeader and math.floor(isHeader:GetHeight()) == 0) then
-			local height = isHeader:GetChildren():GetHeight()
-			isHeader:SetHeight(height)
+		backdrop.baseWidth, backdrop.baseHeight = obj:GetSize()
+
+		-- We have to define a minHeight on the header if it doesn't have one. The
+		-- reason for this is that the header frame will have an height of 0.1 when
+		-- it doesn't have any frames visible.
+		if(
+			isHeader and
+			(
+				not isHeader:GetAttribute'minHeight' and math.floor(isHeader:GetHeight()) == 0 or
+				not isHeader:GetAttribute'minWidth' and math.floor(isHeader:GetWidth()) == 0
+			)
+		) then
+			isHeader:SetHeight(obj:GetHeight())
+			isHeader:SetWidth(obj:GetWidth())
+
+			if(not isHeader:GetAttribute'minHeight') then
+				isHeader.dirtyMinHeight = true
+				isHeader:SetAttribute('minHeight', obj:GetHeight())
+			end
+
+			if(not isHeader:GetAttribute'minWidth') then
+				isHeader.dirtyMinWidth = true
+				isHeader:SetAttribute('minWidth', obj:GetWidth())
+			end
+		elseif(isHeader) then
+			backdrop.baseWidth, backdrop.baseHeight = isHeader:GetSize()
 		end
+
+		backdrop:SetScript("OnShow", OnShow)
+		backdrop:SetScript('OnHide', OnHide)
 
 		backdrop:SetScript("OnDragStart", OnDragStart)
 		backdrop:SetScript("OnDragStop", OnDragStop)
+
+		backdrop:SetScript('OnSizeChanged', OnSizeChanged)
 
 		backdropPool[target] = backdrop
 
@@ -394,25 +547,11 @@ do
 	local opt = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 	opt:Hide()
 
-	opt.name = "DarkDurance UnitFrame"
+	opt.name = _TITLE
 	opt:SetScript("OnShow", function(self)
 		local title = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 		title:SetPoint('TOPLEFT', 16, -16)
-		title:SetText(opt.name)
-
-        local toggleButton = CreateFrame('Button', nil, opt, 'OptionsButtonTemplate')
-        toggleButton:SetPoint('LEFT', title, 'RIGHT', 5, 0)
-        toggleButton:SetHeight(25)
-        toggleButton:SetWidth(100)
-        toggleButton:SetText('Toggle Lock')
-        toggleButton:SetScript('OnClick', function() SlashCmdList['DDUF_MOVE']() end)
-
-        local resetButton = CreateFrame('Button', nil, opt, 'OptionsButtonTemplate')
-        resetButton:SetPoint('LEFT', toggleButton, 'RIGHT', 5, 0)
-        resetButton:SetHeight(25)
-        resetButton:SetWidth(100)
-        resetButton:SetText('Reset')
-        resetButton:SetScript('OnClick', function() _DB=nil; DarkDuranceDB=nil; ReloadUI() end)
+		title:SetText(_TITLE)
 
 		local subtitle = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
 		subtitle:SetHeight(40)
@@ -421,9 +560,7 @@ do
 		subtitle:SetNonSpaceWrap(true)
 		subtitle:SetWordWrap(true)
 		subtitle:SetJustifyH'LEFT'
-		subtitle:SetText('Note that the initial frame position set by layouts are currently'
-		.. ' not saved. This means that a reload of the UI is required to correctly reset'
-		.. ' the position after deleting an element.')
+		subtitle:SetFormattedText('Type %s to toggle frame anchors.', _G['SLASH_' .. slashGlobal .. 1])
 
 		local scroll = CreateFrame("ScrollFrame", nil, self)
 		scroll:SetPoint('TOPLEFT', subtitle, 'BOTTOMLEFT', 0, -8)
@@ -448,14 +585,15 @@ do
 
 		local createOrUpdateMadnessOfGodIhateGUIs
 		local OnClick = function(self)
+			local row = self:GetParent()
 			scroll.value = slider:GetValue()
-			_DB[self.style][self.ident] = nil
+			_DB[row.style][row.ident] = nil
 
-			if(not next(_DB[self.style])) then
-				_DB[self.style] = nil
+			if(not next(_DB[row.style])) then
+				_DB[row.style] = nil
 			end
 
-			restoreDefaultPosition(self.style, self.ident)
+			restoreDefaultPosition(row.style, row.ident)
 
 			return createOrUpdateMadnessOfGodIhateGUIs()
 		end
@@ -463,6 +601,137 @@ do
 		local OnEnter = function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 			GameTooltip:SetText(DELETE)
+		end
+
+		local handleInput = function(label)
+			local text = label:GetText()
+			if(text == '-' or text == '' or text == '.') then
+				text = 0
+			end
+
+			local num = tonumber(text)
+			if(label.hasPostfix and not num) then
+				num = tonumber(text:sub(1,-2))
+			end
+
+			if(label.onlyAboveZero) then
+				if(not (num > 0)) then
+					return .01
+				else
+					return num
+				end
+			end
+
+			return num or text
+		end
+
+		local saveRestorePosition = function(row)
+			saveCustomPosition(
+				row.style,
+				row.ident,
+
+				handleInput(row.pointLabel),
+				handleInput(row.xLabel),
+				handleInput(row.yLabel),
+				handleInput(row.scaleLabel)
+			)
+
+			restoreCustomPosition(row.style, row.ident)
+		end
+
+		local createEditBox
+		do
+			local OnEscapePressed = function(self)
+				self:SetText(self.oldText)
+				self:ClearFocus()
+
+				saveRestorePosition(self:GetParent())
+			end
+
+			local OnEnterPressed = function(self)
+				local text = self:GetText()
+				self:ClearFocus()
+
+				saveRestorePosition(self:GetParent())
+			end
+
+			local OnEditFocusGained = function(self)
+				self.oldText = self:GetText()
+
+				if(self.hasPostfix) then
+					self.oldText = self.oldText:sub(1, -2)
+				end
+
+				self:SetText(self.oldText)
+				self.newText = nil
+			end
+
+			local OnEditFocusLost = function(self)
+				local text = self:GetText()
+				if(text == '-' or text == '' or text == '.') then
+					if(self.onlyAboveZero) then
+						text = 0.01
+					else
+						text = 0
+					end
+				end
+
+				self:SetText(string.format(self.numFormat, text))
+
+				self.newText = nil
+				self.oldText = nil
+			end
+
+			local OnTextChanged = function(self, userInput)
+				if(userInput) then
+					self.newText = self:GetText()
+					saveRestorePosition(self:GetParent())
+				end
+			end
+
+			local OnChar = function(self, key)
+				local text = self:GetText()
+				if(
+					not tonumber(text .. '0') or
+					(not tonumber(key) and key ~= '-' and key ~= '.') or
+					(self.onlyAboveZero and key == '-' and not (self:GetNumber() < 0))
+				) then
+					local pos = self:GetCursorPosition() - 1
+					self:SetText(self.newText or self.oldText)
+					self:SetCursorPosition(pos)
+				end
+
+				self.newText = self:GetText()
+			end
+
+			createEditBox = function(self)
+				local editbox = CreateFrame('EditBox', nil, self)
+
+				editbox:SetWidth(40)
+				editbox:SetMaxLetters(5)
+				editbox:SetAutoFocus(false)
+				editbox:SetFontObject(GameFontHighlight)
+
+				editbox:SetPoint('TOP', 0, -4)
+				editbox:SetPoint('BOTTOM', 0, 0)
+
+				local background = editbox:CreateTexture(nil, 'BACKGROUND')
+				background:SetPoint('TOP', 0, -1)
+				background:SetPoint'LEFT'
+				background:SetPoint'RIGHT'
+				background:SetPoint('BOTTOM', 0, 4)
+
+				background:SetTexture(1, 1, 1, .05)
+
+				editbox:SetScript('OnEscapePressed', OnEscapePressed)
+				editbox:SetScript('OnEnterPressed', OnEnterPressed)
+				editbox:SetScript('OnEditFocusGained', OnEditFocusGained)
+				editbox:SetScript('OnEditFocusLost', OnEditFocusLost)
+				editbox:SetScript('OnTextChanged', OnTextChanged)
+				editbox:SetScript('OnChar', OnChar)
+
+				return editbox
+			end
 		end
 
 		function createOrUpdateMadnessOfGodIhateGUIs()
@@ -486,9 +755,32 @@ do
 						box:SetPoint'LEFT'
 						box:SetPoint('RIGHT', -30, 0)
 
-						local title = box:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+						local title = box:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 						title:SetPoint('BOTTOMLEFT', box, 'TOPLEFT', 8, 0)
 						box.title = title
+
+						if(numStyles == 1) then
+							local scaleTitle = box:CreateFontString(nil, nil, 'GameFontHighlight')
+							scaleTitle:SetPoint('BOTTOMRIGHT', box, 'TOPRIGHT', -35, 0)
+							scaleTitle:SetWidth(40)
+							scaleTitle:SetText'Scale'
+							scaleTitle:SetJustifyH'CENTER'
+							box.scaleTitle = scaleTitle
+
+							local yTitle = box:CreateFontString(nil, nil, 'GameFontHighlight')
+							yTitle:SetPoint('RIGHT', scaleTitle, 'LEFT', -5, 0)
+							yTitle:SetWidth(40)
+							yTitle:SetText'Y'
+							yTitle:SetJustifyH'CENTER'
+							box.yTitle = yTitle
+
+							local xTitle = box:CreateFontString(nil, nil, 'GameFontHighlight')
+							xTitle:SetPoint('RIGHT', yTitle, 'LEFT', -5, 0)
+							xTitle:SetWidth(40)
+							xTitle:SetText'X'
+							xTitle:SetJustifyH'CENTER'
+							box.xTitle = xTitle
+						end
 
 						data[numStyles] = box
 					end
@@ -517,20 +809,46 @@ do
 							row:SetPoint('RIGHT', -25, 0)
 							row:SetHeight(24)
 
-							local anchor = row:CreateFontString(nil, nil, 'GameFontHighlight')
-							anchor:SetPoint('RIGHT', -10, 0)
-							anchor:SetPoint('TOP', 0, -4)
-							anchor:SetPoint'BOTTOM'
-							anchor:SetJustifyH'RIGHT'
-							row.anchor = anchor
+							-- Notice how these are anchored right to left. Initially when I
+							-- implemented these, I swapped X and Y positioning. It was really
+							-- fun to debug!
+							local scaleLabel = createEditBox(row)
+							scaleLabel:SetPoint('RIGHT', -10, 0)
+							scaleLabel:SetJustifyH'CENTER'
 
-							local label = row:CreateFontString(nil, nil, 'GameFontHighlight')
-							label:SetPoint('LEFT', 10, 0)
-							label:SetPoint('RIGHT', anchor)
-							label:SetPoint('TOP', 0, -4)
-							label:SetPoint'BOTTOM'
-							label:SetJustifyH'LEFT'
-							row.label = label
+							scaleLabel.hasPostfix = true
+							scaleLabel.onlyAboveZero = true
+							scaleLabel.numFormat = '%.2fx'
+
+							row.scaleLabel = scaleLabel
+
+							local yLabel = createEditBox(row)
+							yLabel:SetPoint('RIGHT', scaleLabel, 'LEFT', -5, 0)
+							yLabel:SetJustifyH'CENTER'
+
+							yLabel.numFormat = '%d'
+							row.yLabel = yLabel
+
+							local xLabel = createEditBox(row)
+							xLabel:SetPoint('RIGHT', yLabel, 'LEFT', -5, 0)
+							xLabel:SetJustifyH'CENTER'
+
+							xLabel.numFormat = '%d'
+							row.xLabel = xLabel
+
+							local pointLabel = row:CreateFontString(nil, nil, 'GameFontHighlight')
+							pointLabel:SetPoint('RIGHT', xLabel, 'LEFT', -5, 0)
+							pointLabel:SetJustifyH'CENTER'
+							pointLabel:SetText'BOTTOMRIGHT'
+							pointLabel:SetWidth(pointLabel:GetWidth())
+							row.pointLabel = pointLabel
+
+							local unitLabel= row:CreateFontString(nil, nil, 'GameFontHighlight')
+							unitLabel:SetPoint('LEFT', 10, 0)
+							unitLabel:SetPoint('TOP', 0, -4)
+							unitLabel:SetPoint'BOTTOM'
+							unitLabel:SetJustifyH'LEFT'
+							row.unitLabel = unitLabel
 
 							local delete = CreateFrame("Button", nil, row)
 							delete:SetWidth(16)
@@ -551,12 +869,15 @@ do
 
 						-- Fetch row and update it:
 						local row = rows[numFrames]
-						local point, _, x, y = string.split('\031', points)
-						row.anchor:SetFormattedText('%11s %4s %4s', point, x, y)
-						row.label:SetText(smartName(unit))
+						local point, _, x, y, s = string.split('\031', points)
+						row.scaleLabel:SetText(string.format('%.2fx', s or 1))
+						row.xLabel:SetText(x)
+						row.yLabel:SetText(y)
+						row.pointLabel:SetText(point)
+						row.unitLabel:SetText(smartName(unit))
 
-						row.delete.style = style
-						row.delete.ident = unit
+						row.style = style
+						row.ident = unit
 						row:Show()
 
 						numFrames = numFrames + 1
@@ -667,14 +988,22 @@ do
 	InterfaceOptions_AddCategory(opt)
 end
 
-SLASH_DDUF_MOVE1 = '/dd'
-SlashCmdList['DDUF_MOVE'] = function(inp)
+local slashList = GetAddOnMetadata(_NAME, 'X-SlashCmdList'):gsub('%s+', '')
+local handleCmds = function(...)
+	for i=1, select('#', ...) do
+		local cmd = select(i, ...)
+		_G['SLASH_' ..slashGlobal .. i] = cmd
+	end
+end
+handleCmds(string.split(',', slashList))
+
+SlashCmdList[slashGlobal] = function(inp)
 	if(InCombatLockdown()) then
 		return print"Frames cannot be moved while in combat. Bailing out."
 	end
 
-	if(inp and inp:match("%S+")) then
-		InterfaceOptionsFrame_OpenToCategory'oUF: MovableFrames'
+	if(inp:match("%S+")) then
+		InterfaceOptionsFrame_OpenToCategory(_TITLE)
 	else
 		if(not _LOCK) then
 			for k, obj in next, oUF.objects do
