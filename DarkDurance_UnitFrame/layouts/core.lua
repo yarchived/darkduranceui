@@ -4,10 +4,18 @@ local addon = ns[addonName]
 local oUF = ns.oUF
 local config = addon.cfg
 
+addon.units = {}
+
 -- locals
 local tinsert = table.insert
 local type = type
 local format = string.format
+local pairs = pairs
+local next, next
+local IsLoggedIn = IsLoggedIn
+
+local utils = addon.utils
+local safecall = utils.safecall
 
 -- func pool
 local styleFuncs = {
@@ -79,21 +87,21 @@ end
 oUF:RegisterStyle(addonName, function(self, unit)
     --print('style call', self, unit)
     for _, func in pairs(styleFuncs.common) do
-        func(self, unit)
+        --func(self, unit)
+        safecall(func, self, unit)
     end
 
     local funcs = styleFuncs[unit]
     if(funcs) then
         for i = 1, #funcs do
             local func = funcs[i]
-            func(self, unit)
+            safecall(func, self, unit)
+            --func(self, unit)
         end
     else
         oUF.error("There's no style registered for [%s].", unit)
     end
 end)
 oUF:SetActiveStyle(addonName)
-
-addon.units = {}
 
 

@@ -2,5 +2,6 @@
     <Script file='utils.lua' />
     <Script file='colors.lua' />
     <Script file='tags.lua' />
+    <Script file='safecall.lua' />
     <Script file='raid_debuff_data.lua' />
 </Ui>
