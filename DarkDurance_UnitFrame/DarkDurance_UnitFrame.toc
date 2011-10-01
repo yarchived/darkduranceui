@@ -1,0 +1,15 @@
+## Interface: 40000
+## Title: DarkDurance UnitFrame
+
+## OptionalDeps: !ClassColors
+
+## SavedVariables: DarkDuranceFramePosition
+## X-SavedVariables: DarkDuranceFramePosition
+## X-SlashCmdList: /dd, /darkdurance
+
+## X-oUF: DarkDurance_oUF
+
+
+
+
+
