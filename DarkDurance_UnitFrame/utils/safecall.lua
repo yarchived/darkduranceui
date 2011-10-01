@@ -6,6 +6,7 @@ local loadstring = loadstring
 local rawset = rawset
 local setmetatable = setmetatable
 local select = select
+local tconcat = table.concat
 
 local function errorhandler(err)
 	return geterrorhandler()(err)

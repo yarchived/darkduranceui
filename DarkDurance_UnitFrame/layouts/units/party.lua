@@ -34,6 +34,7 @@ addon:spawn(function()
         ]],
         'showParty', true,
         --'showRaid', true,
+        'showSolo', true,
         'unitsPerColumn', 2,
         'maxColumns', 2,
         'point', 'LEFT',

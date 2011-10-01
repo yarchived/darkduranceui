@@ -2,7 +2,6 @@
 local addonName, ns = ...
 local addon = ns[addonName]
 local oUF = ns.oUF
---local libstatusbar = LibStub('SuckLessStatusBar-1.0')
 local utils = addon.utils
 
 ns.style_party = function(self, unit)
@@ -20,7 +19,6 @@ ns.style_party = function(self, unit)
 
     local WIDTH, HEIGHT = 44, 86
 
-    --local hp = libstatusbar:NewStatusBar(nil, self)
     local hp = CreateFrame('StatusBar', nil, self)
     hp:SetStatusBarTexture(utils.mediaPath .. 'PartyHealth')
     hp:SetOrientation('VERTICAL')
@@ -35,11 +33,21 @@ ns.style_party = function(self, unit)
     hp.bg:SetTexture(utils.mediaPath .. 'PartyHealth')
     hp.bg.multiplier = ns.colorMultiplier
 
-    --local mp = libstatusbar:NewStatusBar(nil, self)
     local mp = CreateFrame('StatusBar', nil, self)
-    mp:SetStatusBarTexture(utils.mediaPath .. 'PartyHealth')
-    mp:SetOrientation('VERTICAL')
-    mp:SetReverse(true)
+    --mp:SetStatusBarTexture(utils.mediaPath .. 'PartyHealth')
+    --mp:SetOrientation('VERTICAL')
+    do
+        --print(mp:GetStatusBarTexture():GetTexCoord())
+        --mp:GetStatusBarTexture():SetTexCoord(1, 0, 0, 1)
+        --mp:GetStatusBarTexture():SetRotation(1)
+        --print(mp:GetStatusBarTexture():)
+        local t = mp:CreateTexture(nil, 'OVERLAY')
+        t:SetTexture(utils.mediaPath..'PartyHealth')
+        t:SetTexCoord(1, 0, 1, 0)
+        mp:SetStatusBarTexture(t)
+        mp:SetOrientation('VERTICAL')
+    end
+
     self.Power = mp
     utils.setSize(mp, WIDTH, HEIGHT)
     mp:SetPoint('BOTTOMRIGHT', 0, 3)
