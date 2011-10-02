@@ -84,13 +84,13 @@ end)
 DDUF:UnitStyle(_UNITS, function(self, unit)
     local tar = unit == 'target'
 
-    self.Tags.name = DDUF:CreateTag(self, self.Health, '[name]', function(fs)
+    self.Tags.name = self:CreateTag(self.Health, '[name]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         local xoffset = 100
         fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
     end)
 
-    self.Tags.level = DDUF:CreateTag(self, self, '[level]', function(fs)
+    self.Tags.level = self:CreateTag(self, '[level]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
 
     end)
