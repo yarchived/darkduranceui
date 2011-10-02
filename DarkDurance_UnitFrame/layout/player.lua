@@ -9,22 +9,59 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     self:SetSize(270, 45)
 end)
 
-DDUF:UnitStyle('player', function(self, unit)
-    local forground = self:CreateTexture(nil, 'ARTWORK')
+DDUF:UnitStyle(_UNITS, function(self, unit)
+    local tar = unit == 'target'
 
-    local file = media.player.player
+    --local forground = self:CreateTexture(nil, 'ARTWORK')
+    local forground = self.FG:CreateTexture(nil, 'ARTWORK')
+    forground:SetAllPoints(self.FG)
+
+    self.FG:ClearAllPoints()
+    self.FG:SetSize(512, 128)
+    self.FG:SetPoint('CENTER', self, 0, 0)
+
+    self.FG.Texture = forground
+
+    self.FG:SetScale(.7)
+
+    local file = tar and media.target.target or media.player.player
     forground:SetTexture(media.getTexture(file))
+    if(tar) then
+        DDUF.FlipTexture(forground)
+    end
 
     self.Textures[forground] = file
 end)
 
-DDUF:UnitStyle('target', function(self, unit)
-    local forground = self:CreateTexture(nil, 'ARTWORK')
+DDUF:UnitStyle(_UNITS, function(self, unit)
+    local tar = unit == 'target'
+    local hp, mp
 
-    local file = media.target.target
-    forground:SetTexture(media.getTexture(file))
+    hp = CreateFrame('StatusBar', nil, self.BG)
+    mp = CreateFrame('StatusBar', nil, self.BG)
+    self.Health = hp
+    self.Power = mp
 
-    self.Textures[forground] = file
+    hp:SetFrameLevel(mp:GetFrameLevel()+1)
+
+    hp.colorClass = true
+    mp.colorPower = true
+
+
+    hp:SetSize(155, 15)
+    mp:SetSize(140, 28)
+
+    local xoffset = 30
+    hp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
+
+    mp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
+end)
+
+DDUF:UnitStyle(_UNITS, function(self, unit)
+end)
+DDUF:UnitStyle(_UNITS, function(self, unit)
+end)
+DDUF:UnitStyle(_UNITS, function(self, unit)
 end)
 
 DDUF:Spawn(function()

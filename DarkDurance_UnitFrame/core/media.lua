@@ -18,6 +18,9 @@ media.getTexture = function(file, style)
     return media.basepath:format(style, file)
 end
 
+media.dd = [[Interface\Addons\]] .. _NAME .. [[\media\dd]]
+media.roth = [[Interface\Addons\]] .. _NAME .. [[\media\roth]]
+
 media.party = {
     party = 'party_party',
     bg = 'party_bg',

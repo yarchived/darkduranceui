@@ -13,6 +13,9 @@ DDUF:UnitCommonStyle(function(self, unit)
     self.BG:SetAllPoints(self)
     self.BG:SetFrameStrata'BACKGROUND'
 
+    self.FG = CreateFrame('Frame', nil, self)
+    self.FG:SetAllPoints(self)
+
     self.Textures = {}
 end)
 

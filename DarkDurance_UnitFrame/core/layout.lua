@@ -4,7 +4,7 @@ local oUF = _NS.oUF
 local DDUF = _NS[_NAME]
 
 DDUF.styles = {}
-DDUF.unit = {}
+DDUF.units = {}
 
 local style_mt = {
     __call = function(funcs, self, ...)
@@ -16,13 +16,13 @@ local style_mt = {
 
 function DDUF:UnitStyle(unit, func)
     if(not func) then return end
-    if(type(units) == 'table') then
+    if(type(unit) == 'table') then
         for _, u in next, unit do
             self:UnitStyle(u, func)
         end
     else
         if(not self.styles[unit]) then
-            self.styles = setmetatable({}, style_mt)
+            self.styles[unit] = setmetatable({}, style_mt)
         end
         tinsert(self.styles[unit], func)
     end
