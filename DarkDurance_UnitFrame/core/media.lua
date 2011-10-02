@@ -5,6 +5,8 @@ local DDUF = _NS[_NAME]
 DDUF.media = {}
 local media = DDUF.media
 
+media.font = STANDARD_TEXT_FONT
+
 media.backdrop = {
     bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
     insets = { top=-1, left=-1, bottom=-1, right=-1 },

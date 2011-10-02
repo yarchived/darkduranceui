@@ -17,6 +17,8 @@ DDUF:UnitCommonStyle(function(self, unit)
     self.FG:SetAllPoints(self)
 
     self.Textures = {}
+
+    self.Tags = {}
 end)
 
 local menu = function(self)

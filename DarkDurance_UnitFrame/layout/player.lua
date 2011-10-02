@@ -7,6 +7,7 @@ local _UNITS = {'player', 'target'}
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
     self:SetSize(270, 45)
+    self.colors = DDUF.colors
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
@@ -27,7 +28,7 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     local file = tar and media.target.target or media.player.player
     forground:SetTexture(media.getTexture(file))
     if(tar) then
-        DDUF.FlipTexture(forground)
+        DDUF:FlipTexture(forground)
     end
 
     self.Textures[forground] = file
@@ -44,8 +45,8 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
 
     hp:SetFrameLevel(mp:GetFrameLevel()+1)
 
-    --hp.colorClass = true
-    mp.colorClass = true
+    hp.colorSmooth = true
+    mp.colorPower = true
 
     hp:SetStatusBarTexture(media.dd)
     mp:SetStatusBarTexture(media.roth)
@@ -56,15 +57,59 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     local xoffset = 30
     hp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
     mp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
+
+    hp.bg = hp:CreateTexture(nil, 'BORDER')
+    hp.bg:SetTexture(media.dd)
+    hp.bg:SetAllPoints(hp)
+    hp.bg.multiplier = .3
+
+    mp.bg = mp:CreateTexture(nil, 'BORDER')
+    mp.bg:SetTexture(media.roth)
+    mp.bg:SetAllPoints(mp)
+    mp.bg.multiplier = .3
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
+    local portrait = CreateFrame('PlayerModel', nil, self.BG)
+    self.Portrait = portrait
+
+    local _size = 40
+    portrait:SetSize(_size, _size)
+
+    local tar = unit == 'target'
+    local xoffset = 40
+    portrait:SetPoint(tar and 'BOTTOMRIGHT' or 'BOTTOMLEFT', self, tar and (0 - xoffset) or xoffset, 6)
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
+    local tar = unit == 'target'
+
+    self.Tags.name = DDUF:CreateTag(self, self.Health, '[name]', function(fs)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+        local xoffset = 100
+        fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
+    end)
+
+    self.Tags.level = DDUF:CreateTag(self, self, '[level]', function(fs)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+
+    end)
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle('player', function(self, unit)
+    self:RegisterEvent('PLAYER_TARGET_CHANGED', function()
+        if(UnitExists'target') then
+            if(UnitIsEnemy('player', 'target')) then
+                PlaySound'igCreatureAggroSelect'
+            elseif(UnitIsFriend('player', 'target')) then
+                PlaySound'igCharacterNPCSelect'
+            else
+                PlaySound'igCreatureNeutralSelect'
+            end
+        else
+            PlaySound'INTERFACESOUND_LOSTTARGETUNIT'
+        end
+    end)
 end)
 
 DDUF:Spawn(function()
