@@ -44,23 +44,26 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
 
     hp:SetFrameLevel(mp:GetFrameLevel()+1)
 
-    hp.colorClass = true
-    mp.colorPower = true
+    --hp.colorClass = true
+    mp.colorClass = true
 
+    hp:SetStatusBarTexture(media.dd)
+    mp:SetStatusBarTexture(media.roth)
 
     hp:SetSize(155, 15)
     mp:SetSize(140, 28)
 
     local xoffset = 30
     hp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
-
     mp:SetPoint('CENTER', self, tar and (0-xoffset) or xoffset, 0)
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
 end)
+
 DDUF:UnitStyle(_UNITS, function(self, unit)
 end)
+
 DDUF:UnitStyle(_UNITS, function(self, unit)
 end)
 
