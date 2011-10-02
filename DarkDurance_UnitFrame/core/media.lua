@@ -5,7 +5,18 @@ local DDUF = _NS[_NAME]
 DDUF.media = {}
 local media = DDUF.media
 
+media.backdrop = {
+    bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
+    insets = { top=-1, left=-1, bottom=-1, right=-1 },
+}
+
 media.basepath = 'Interface\\AddOns\\'.._NAME..'\\media\\%s\\%s'
+
+media.getTexture = function(file, style)
+    style = style or 'origin'
+
+    return media.basepath:format(style, file)
+end
 
 media.party = {
     party = 'party_party',

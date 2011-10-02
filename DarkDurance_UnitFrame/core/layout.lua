@@ -4,6 +4,7 @@ local oUF = _NS.oUF
 local DDUF = _NS[_NAME]
 
 DDUF.styles = {}
+DDUF.unit = {}
 
 local style_mt = {
     __call = function(funcs, self, ...)
@@ -14,6 +15,7 @@ local style_mt = {
 }
 
 function DDUF:UnitStyle(unit, func)
+    if(not func) then return end
     if(type(units) == 'table') then
         for _, u in next, unit do
             self:UnitStyle(u, func)
@@ -45,6 +47,4 @@ oUF:RegisterStyle(_NAME, function(self, unit)
 end)
 
 oUF:SetActiveStyle(_NAME)
-
-DDUF:UnitCommonStyle(function() end)
 

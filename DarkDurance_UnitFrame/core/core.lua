@@ -1,9 +1,8 @@
 
 local _NAME, _NS = ...
 
-_NS[_NAME] = {}
-_G[_NAME] = _NS[_NAME]
+local DDUF = {}
 
-
-
+_NS[_NAME] = DDUF
+_G[_NAME] = DDUF
 
