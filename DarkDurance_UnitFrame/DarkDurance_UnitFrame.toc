@@ -20,9 +20,8 @@ core\layout.lua
 
 layout\core.lua
 layout\player.lua
-layout\target.lua
-layout\pet.lua
 layout\targettarget.lua
+layout\pet.lua
 layout\focus.lua
 layout\boss.lua
 layout\tanks.lua

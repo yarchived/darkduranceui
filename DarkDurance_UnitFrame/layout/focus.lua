@@ -64,7 +64,7 @@ end)
 
 DDUF:Spawn(function()
     local focus = oUF:Spawn'focus'
-    focus:SetPoint('CENTER', UIParent)
+    focus:SetPoint('CENTER', -300, 0)
     DDUF.units.focus = focus
 end)
 
