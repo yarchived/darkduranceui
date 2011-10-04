@@ -47,5 +47,7 @@ DDUF:UnitCommonStyle(function(self, unit)
     self.menu = menu
     self:RegisterForClicks'AnyUp'
     self:SetAttribute('type2', 'menu')
+
+    self.colors = DDUF.colors
 end)
 

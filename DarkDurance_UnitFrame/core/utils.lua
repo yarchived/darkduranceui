@@ -17,3 +17,8 @@ function DDUF:FlipTexture(texture)
     end
 end
 
+function DDUF:TextBackdrop(obj)
+    obj:SetBackdrop(self.media.backdrop)
+    obj:SetBackdropColor(1, 0, 0, .5)
+end
+

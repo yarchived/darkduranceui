@@ -7,13 +7,11 @@ local _UNITS = {'player', 'target'}
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
     self:SetSize(270, 45)
-    self.colors = DDUF.colors
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
     local tar = unit == 'target'
 
-    --local forground = self:CreateTexture(nil, 'ARTWORK')
     local forground = self.FG:CreateTexture(nil, 'ARTWORK')
     forground:SetAllPoints(self.FG)
 
@@ -32,6 +30,23 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     end
 
     self.Textures[forground] = file
+end)
+
+DDUF:UnitStyle(_UNITS, function(self, unit)
+     local bg = self.BG:CreateTexture(nil, 'BACKGROUND')
+     bg:SetAllPoints(self.FG)
+     self.BG.Texture = bg
+
+
+     local tar = unit == 'target'
+
+     local file = media[tar and 'target' or 'player'].bg
+     bg:SetTexture(media.getTexture(file))
+     if(tar) then
+         DDUF:FlipTexture(bg)
+     end
+
+     self.Textures[bg] = file
 end)
 
 DDUF:UnitStyle(_UNITS, function(self, unit)
