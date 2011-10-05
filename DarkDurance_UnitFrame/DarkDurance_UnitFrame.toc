@@ -28,3 +28,6 @@ layout\tanks.lua
 layout\raid.lua
 layout\arena.lua
 
+custom.xml
+custom.lua
+
