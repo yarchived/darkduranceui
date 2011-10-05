@@ -23,9 +23,10 @@ layout\player.lua
 layout\targettarget.lua
 layout\pet.lua
 layout\focus.lua
-layout\boss.lua
-layout\tanks.lua
+layout\party.lua
 layout\raid.lua
+layout\tanks.lua
+layout\boss.lua
 layout\arena.lua
 
 custom.xml

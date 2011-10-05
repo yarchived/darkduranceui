@@ -42,7 +42,7 @@ oUF:RegisterStyle(_NAME, function(self, unit)
         DDUF.styles.common(self, unit)
         funcs(self, unit)
     else
-
+        DDUF.error('No style registered for unit:[%s]', unit)
     end
 end)
 

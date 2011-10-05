@@ -41,7 +41,7 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
     self.Health = hp
 
     hp:SetStatusBarTexture(media.roth)
-    hp:SetSize(55, 10)
+    hp:SetSize(55, 12)
     hp:SetPoint('BOTTOMLEFT', self, 'CENTER', -12, -6)
 
     hp.colorClass = true
