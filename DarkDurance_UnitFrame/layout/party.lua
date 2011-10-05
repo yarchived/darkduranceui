@@ -1,9 +1,13 @@
 
+if(true) then return end
+
 local _NAME, _NS = ...
 local DDUF, oUF = _NS[_NAME], _NS.oUF
 local media = DDUF.media
 
-DDUF:UnitStyle('party', function(self, unit)
+local _UNIT = 'party'
+
+DDUF:UnitStyle(_UNIT, function(self, unit)
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
 
     self.FG:ClearAllPoints()
@@ -18,7 +22,7 @@ DDUF:UnitStyle('party', function(self, unit)
 end)
 
 DDUF:Spawn(function()
-    local party = oUF:SpawnHeader(nil, nil, nil,
+    local header = oUF:SpawnHeader(nil, nil, nil,
         '', [[
             local header = self:GetParent()
             self:SetSize(header:GetAttribute('__unitframe-width', '__unitframe-height'))
@@ -36,7 +40,7 @@ DDUF:Spawn(function()
         '__unitframe-scale', '1'
     )
 
-    party:SetPoint('LEFT', 5, 0)
-    DDUF.units.party = party
+    header:SetPoint('LEFT', 5, 0)
+    DDUF.units[_UNIT] = header
 end)
 
