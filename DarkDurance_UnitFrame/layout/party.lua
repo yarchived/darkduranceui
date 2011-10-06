@@ -8,6 +8,7 @@ local _UNIT = 'party'
 
 DDUF:UnitStyle(_UNIT, function(self, unit)
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
+    fore:SetAllPoints()
 
     self.FG:ClearAllPoints()
     self.FG:SetScale(.7)
@@ -32,8 +33,31 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:UnitStyle(_UNIT, function(self, unit)
-    DDUF:TestBackdrop(self)
+    local hp = CreateFrame('StatusBar', nil, self.BG)
+    self.Health = hp
+
+    hp:SetStatusBarTexture(media.roth)
+    hp:SetSize(60, 12)
+    hp.colorClass = true
+
+    hp:SetPoint('TOPLEFT', self, 'CENTER', -11, -6)
+
+    hp.bg = hp:CreateTexture(nil, 'BORDER')
+    hp.bg:SetTexture(media.roth)
+    hp.bg:SetAllPoints()
+    hp.bg.multiplier = .3
 end)
+
+DDUF:UnitStyle(_UNIT, function(self, unit)
+    local portrait = CreateFrame('PlayerModel', nil, self.BG)
+    self.Portrait = portrait
+
+    portrait:SetPoint('BOTTOMRIGHT', self, 'CENTER', -15, -15)
+
+    local _SIZE = 35
+    portrait:SetSize(_SIZE, _SIZE)
+end)
+
 
 DDUF:Spawn(function()
     local header = oUF:SpawnHeader(nil, nil, 'custom [group][@player,exists]show;hide',
@@ -54,14 +78,14 @@ DDUF:Spawn(function()
         'showSolo', true,
         --'unitsPerColumn', 1,
         --'maxColumn', 5,
-        --'point', 'TOP',
-        --'yOffset', -5,
-        'DDUF-width', 125,
-        'DDUF-height', 65,
+        'point', 'BOTTOM',
+        'yOffset', 10,
+        'DDUF-width', 100,
+        'DDUF-height', 40,
         'DDUF-scale', 1
     )
 
-    header:SetPoint('LEFT', UIParent,  5, 0)
+    header:SetPoint('LEFT', UIParent,  15, 0)
     header:Show()
     DDUF.units[_UNIT] = header
 end)
