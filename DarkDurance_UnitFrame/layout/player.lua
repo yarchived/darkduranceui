@@ -208,6 +208,59 @@ DDUF:UnitStyle('player', function(self, unit)
     end)
 end)
 
+DDUF:UnitStyle('player', function(self, unit)
+    local threat_status = 1
+    local fg_files = {
+        media.player.player,
+        media.player.player_threat_low,
+        media.player.player_threat_high,
+    }
+
+    local event_handler = function(self, event, unit)
+        if(unit and unit ~= self.unit) then
+            return
+        end
+
+        local status = UnitCanAttack(self.unit, 'target') and UnitThreatSituation(self.unit, 'target') or 1
+        if(status ~= 2 and status ~= 3) then
+            status = 1
+        end
+
+        if(threat_status ~= status) then
+            threat_status = status
+            self.FG.Texture(media.getTexture(fg_files[status]))
+        end
+    end
+
+    self:RegisterEvent('UNIT_THREAT_SITUATION_UPDATE', event_handler)
+    self:RegisterEvent('PLAYER_TARGET_CHANGED', event_handler)
+    table.insert(self.__elements, event_handler)
+end)
+
+DDUF:UnitStyle('target', function(self, unit)
+    local fg_files = {
+        elite = media.target.elite,
+        rare = media.target.rare,
+        rareelite = media.target.elite,
+        worldboss = media.target.boss,
+    }
+
+    local current_file = media.target.target
+
+    local handler = function(self, event)
+        local classification = UnitExists(self.unit) and UnitClassification(self.unit)
+        local file = classification and fg_files[classification] or media.target.target
+
+        if(current_file ~= file) then
+            current_file = file
+            self.FG.Texture:SetTexture(media.getTexture(file))
+        end
+    end
+
+    table.insert(self.__elements, handler)
+    --self:RegisterEvent('PLAYER_TARGET_CHANGED', handler)
+end)
+
 DDUF:Spawn(function()
     local player = oUF:Spawn'player'
     player:SetPoint('CENTER', -300, -200)

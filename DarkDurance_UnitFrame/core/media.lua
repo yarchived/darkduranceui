@@ -46,7 +46,7 @@ media.target = {
     bg = 'player_bg',
     boss = 'target_boss',
     elite = 'target_elite',
-    rare_elite = 'target_rare_elite',
+    rare = 'target_rare_elite',
 }
 
 media.focus = {
