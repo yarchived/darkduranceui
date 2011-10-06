@@ -1,3 +1,4 @@
 *.7z
 *.tar.bz2
 *.sw[a-z]
+.DS_Store
