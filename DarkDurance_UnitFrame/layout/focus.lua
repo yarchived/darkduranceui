@@ -45,6 +45,8 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
     hp:SetPoint('BOTTOM', self, 0, 5)
 
     hp.colorClass = true
+    hp.colorClassPet = true
+    hp.colorClassNPC = true
 
     hp.bg = hp:CreateTexture(nil, 'BORDER')
     hp.bg:SetTexture(media.roth)
@@ -60,6 +62,18 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
 
     local _SIZE = 45
     portrait:SetSize(_SIZE, _SIZE)
+end)
+
+DDUF:UnitStyle(_UNIT, function(self, unit)
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+        fs:SetPoint('TOP', self, 'BOTTOM', 0, 6)
+    end)
+
+    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
+        fs:SetFont(media.font, 20, 'OUTLINE')
+        fs:SetPoint('CENTER', self, 28, -13)
+    end)
 end)
 
 DDUF:Spawn(function()

@@ -3,13 +3,13 @@ local _NAME, _NS = ...
 local DDUF, oUF = _NS[_NAME], _NS.oUF
 local media = DDUF.media
 
-local _UNITS = {'player', 'target'}
+local _UNIT = {'player', 'target'}
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
     self:SetSize(270, 45)
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
     local forground = self.FG:CreateTexture(nil, 'ARTWORK')
@@ -32,7 +32,7 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     self.Textures[forground] = file
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
      local bg = self.BG:CreateTexture(nil, 'BACKGROUND')
      bg:SetAllPoints(self.FG)
      self.BG.Texture = bg
@@ -49,7 +49,7 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
      self.Textures[bg] = file
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
     local hp, mp
 
@@ -84,7 +84,7 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     mp.bg.multiplier = .3
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -96,19 +96,100 @@ DDUF:UnitStyle(_UNITS, function(self, unit)
     portrait:SetPoint(tar and 'BOTTOMRIGHT' or 'BOTTOMLEFT', self, tar and (0 - xoffset) or xoffset, 6)
 end)
 
-DDUF:UnitStyle(_UNITS, function(self, unit)
+DDUF:UnitStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
-    self.Tags.name = self:CreateTag(self.Health, '[name]', function(fs)
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         local xoffset = 100
         fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
     end)
 
-    self.Tags.level = self:CreateTag(self, '[level]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-
+    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
+        fs:SetFont(media.font, 20, 'OUTLINE')
+        if(tar) then
+            fs:SetPoint('CENTER', self, 'BOTTOMRIGHT', -38, 13)
+        else
+            fs:SetPoint('CENTER', self, 'TOPLEFT', 46, -1)
+        end
     end)
+end)
+
+DDUF:UnitStyle(_UNIT, function(self, unit)
+    local tar = unit == 'target'
+
+    local castbar = CreateFrame('StatusBar', nil, self)
+    self.Castbar = castbar
+
+    local xoffset = -60
+    if(tar) then
+        castbar:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', 0 - xoffset, 20)
+    else
+        castbar:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', xoffset, 20)
+    end
+
+    castbar:SetStatusBarTexture(media.roth)
+    castbar:SetSize(100, 9)
+    castbar:SetStatusBarColor(27/255,147/255,226/255)
+
+    local fg = CreateFrame('Frame', nil, castbar)
+    fg:SetSize(256, 128)
+    fg.Texture = fg:CreateTexture(nil, 'ARTWORK')
+    fg.Texture:SetAllPoints(fg)
+    fg:SetScale(.7)
+    local xoffset = 25
+    fg:SetPoint('CENTER', tar and (0 - xoffset) or xoffset, 0)
+
+    fg.Texture:SetTexture(media.getTexture(media.castbar.castbar))
+    self.Textures[fg.Texture] = media.castbar.castbar
+
+    local bg = CreateFrame('Frame', nil, castbar)
+    bg:SetFrameStrata'BACKGROUND'
+    bg:SetSize(256, 128)
+    bg.Texture = bg:CreateTexture(nil, 'ARTWORK')
+    bg.Texture:SetAllPoints(bg)
+    bg:SetScale(.7)
+    bg:SetPoint('CENTER', fg)
+
+    bg.Texture:SetTexture(media.getTexture(media.castbar.bg))
+    self.Textures[bg.Texture] = media.castbar.bg
+
+    castbar.FG = fg
+    castbar.BG = bg
+    if(tar) then
+        DDUF:FlipTexture(fg.Texture)
+        DDUF:FlipTexture(bg.Texture)
+    end
+
+    local text = castbar:CreateFontString(nil, 'ARTWORK')
+    castbar.Text = text
+    text:SetFont(media.font, 12, 'OUTLINE')
+    local xoffset = 5
+    if(tar) then
+        text:SetPoint('RIGHT', castbar, 0 - xoffset)
+    else
+        text:SetPoint('LEFT', castbar, xoffset, 0)
+    end
+
+    local icon = castbar:CreateTexture(nil, 'ARTWORK')
+    castbar.Icon = icon
+    local _SIZE = 35
+    icon:SetSize(_SIZE, _SIZE)
+    local xoffset = 3
+    if(tar) then
+        icon:SetPoint('RIGHT', castbar, 'LEFT', 0 - xoffset, 0)
+    else
+        icon:SetPoint('LEFT', castbar, 'RIGHT', xoffset, 0)
+    end
+
+    if(not tar) then
+        local safe = castbar:CreateTexture(nil, 'BACKGROUND')
+        castbar.SafeZone = safe
+        safe:SetTexture(media.roth)
+        safe:SetVertexColor(231/255, 48/255, 78/255)
+        safe:SetPoint'TOPRIGHT'
+        safe:SetPoint'BOTTOMRIGHT'
+    end
 end)
 
 DDUF:UnitStyle('player', function(self, unit)

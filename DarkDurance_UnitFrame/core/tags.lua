@@ -8,7 +8,7 @@ function CreateTag(self, region, tagstr, call)
         region, tagstr, call = self, region, tagstr
     end
 
-    local fs = region:CreateFontString()
+    local fs = region:CreateFontString(nil, 'OVERLAY')
     call(fs)
     self:Tag(fs, tagstr)
 
@@ -16,4 +16,11 @@ function CreateTag(self, region, tagstr, call)
 end
 
 oUF:RegisterMetaFunction('CreateTag', CreateTag)
+
+oUF.Tags['dd:difficulty'] = [[
+function(u)
+    local l = UnitLevel(u)
+    return Hex(GetQuestDifficultyColor((l > 0) and l or 99))
+end
+]]
 

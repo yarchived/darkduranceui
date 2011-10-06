@@ -38,7 +38,10 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
 
     hp:SetStatusBarTexture(media.roth)
     hp:SetSize(60, 12)
+
     hp.colorClass = true
+    hp.colorClassPet = true
+    hp.colorClassNPC = true
 
     hp:SetPoint('TOPLEFT', self, 'CENTER', -11, -6)
 
@@ -56,6 +59,18 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
 
     local _SIZE = 35
     portrait:SetSize(_SIZE, _SIZE)
+end)
+
+DDUF:UnitStyle(_UNIT, function(self, unit)
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+        fs:SetPoint('CENTER', self, 25, 8)
+    end)
+
+    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
+        fs:SetFont(media.font, 20, 'OUTLINE')
+        fs:SetPoint('CENTER', self, -67, -21)
+    end)
 end)
 
 

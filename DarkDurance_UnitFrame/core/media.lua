@@ -23,6 +23,11 @@ end
 media.dd = [[Interface\Addons\]] .. _NAME .. [[\media\dd]]
 media.roth = [[Interface\Addons\]] .. _NAME .. [[\media\roth]]
 
+media.castbar = {
+    castbar = 'castbar',
+    bg = 'castbar_bg',
+}
+
 media.party = {
     party = 'party_party',
     bg = 'party_bg',
