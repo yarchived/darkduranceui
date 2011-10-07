@@ -62,7 +62,7 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:UnitStyle(_UNIT, function(self, unit)
-    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         fs:SetPoint('CENTER', self, 25, 8)
     end)

@@ -99,7 +99,7 @@ end)
 DDUF:UnitStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
-    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         local xoffset = 100
         fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
@@ -112,6 +112,11 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
         else
             fs:SetPoint('CENTER', self, 'TOPLEFT', 46, -1)
         end
+    end)
+
+    self.Tags.hp = self:CreateTag(self.FG, '[dd:smarthp]', function(fs)
+        fs:SetFont(media.font, 20, 'OUTLINE')
+        fs:SetPoint('CENTER', self.Health)
     end)
 end)
 
