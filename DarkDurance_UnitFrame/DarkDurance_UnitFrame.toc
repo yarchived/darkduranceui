@@ -3,13 +3,14 @@
 
 ## OptionalDeps: oUF, !ClassColors
 
-## SavedVariables: DarkDuranceFramePosition
-## X-SavedVariables: DarkDuranceFramePosition
+## SavedVariables: DarkDuranceFrameDB
+## X-SavedVariables: DarkDuranceFrameDB
 ## X-SlashCmdList: /dd, /darkdurance
 
 ## X-oUF: DarkDurance_oUF
 
 vendor\oUF\oUF.xml
+vendor\oUF_MovableFrames\movable.lua
 
 core\core.lua
 core\colors.lua
