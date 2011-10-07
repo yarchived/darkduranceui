@@ -197,6 +197,27 @@ DDUF:UnitStyle(_UNIT, function(self, unit)
     end
 end)
 
+DDUF:UnitStyle('target', function(self, unit)
+    local f = CreateFrame('Frame', nil, self)
+    self.Auras = f
+
+    f.size = 24
+    f.spacing = 2
+    f.gap = true
+    f.initialAnchor = 'TOPLEFT'
+    f['growth-x'] = 'RIGHT'
+    f['growth-y'] = 'DOWN'
+
+    local h = (f.size + f.spacing) * 6
+    local w = (f.size + f.spacing) * 4
+    f:SetSize(h, w)
+    f:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', 0, -10)
+
+    f.PostCreateIcon = function(icons, button)
+        button.icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
+    end
+end)
+
 DDUF:UnitStyle('player', function(self, unit)
     self:RegisterEvent('PLAYER_TARGET_CHANGED', function()
         if(UnitExists'target') then
