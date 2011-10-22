@@ -5,46 +5,64 @@ local DDUF = _NS[_NAME]
 
 DDUF.styles = {}
 DDUF.units = {}
+DDUF.commonFuncs = {}
+
+local function styleName(name)
+    return ('%s - %s'):format(_NAME, name)
+end
 
 local style_mt = {
-    __call = function(funcs, self, ...)
-        for _, func in next, funcs do
-            func(self, ...)
+    __call = function(self, ...)
+        for _, func in next, self do
+            func(...)
         end
     end,
 }
+setmetatable(DDUF.commonFuncs, style_mt)
 
-function DDUF:UnitStyle(unit, func)
+local function styleFunc(self, unit)
+    local name = self.style
+    local styleFunc = name and DDUF.styles[name]
+    if(styleFunc) then
+        DDUF.commonFuncs(self, unit)
+        styleFunc(self, unit)
+    end
+end
+
+local function addStyle(name, func)
+    name = styleName(name)
+
+    local funcs = DDUF.styles[name]
+
+    if(not funcs) then
+        oUF:RegisterStyle(name, styleFunc)
+        funcs = setmetatable({}, style_mt)
+        DDUF.styles[name] = funcs
+    end
+
+    table.insert(funcs, func)
+end
+
+function DDUF:RegsiterStyle(name, func)
     if(not func) then return end
-    if(type(unit) == 'table') then
-        for _, u in next, unit do
-            self:UnitStyle(u, func)
+
+    if(type(name) == 'table') then
+        for _, n in next, name do
+            addStyle(n, func)
         end
     else
-        if(not self.styles[unit]) then
-            self.styles[unit] = setmetatable({}, style_mt)
-        end
-        tinsert(self.styles[unit], func)
+        addStyle(name, func)
     end
 end
 
-function DDUF:UnitCommonStyle(func)
-    self:UnitStyle('common', func)
+function DDUF:RegsiterCommonStyle(func)
+    table.insert(self.commonFuncs, func)
 end
 
-function DDUF:Spawn(func)
-    oUF:Factory(func)
+function DDUF:Spawn(name, func)
+    oUF:Factory(function()
+        oUF:SetActiveStyle(styleName(name))
+        func()
+    end)
 end
-
-oUF:RegisterStyle(_NAME, function(self, unit)
-    local funcs = DDUF.styles[unit]
-    if(funcs) then
-        DDUF.styles.common(self, unit)
-        funcs(self, unit)
-    else
-        DDUF.error('No style registered for unit:[%s]', unit)
-    end
-end)
-
-oUF:SetActiveStyle(_NAME)
 
