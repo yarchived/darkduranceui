@@ -17,14 +17,14 @@ end
 
 oUF:RegisterMetaFunction('CreateTag', CreateTag)
 
-oUF.Tags['dd:difficulty'] = [[
+oUF.Tags.Methods['dd:difficulty'] = [[
 function(u)
     local l = UnitLevel(u)
     return Hex(GetQuestDifficultyColor((l > 0) and l or 99))
 end
 ]]
 
-oUF.Tags['dd:smarthp'] = [[
+oUF.Tags.Methods['dd:smarthp'] = [[
     function(u, r)
         local cur, max = UnitHealth(u), UnitHealthMax(u)
         if(not max) then return end
@@ -49,9 +49,9 @@ oUF.Tags['dd:smarthp'] = [[
         end
     end
 ]]
-oUF.TagEvents['dd:smarthp'] = oUF.TagEvents['missinghp']
+oUF.Tags.Events['dd:smarthp'] = oUF.Tags.Events['missinghp']
 
-oUF.Tags['dd:realname'] = [[
+oUF.Tags.Methods['dd:realname'] = [[
     function(u, r)
         return UnitName(r or u)
     end
@@ -63,13 +63,13 @@ oUF.Tags['dd:realname'] = [[
 local _ENV
 do
     local dummy_name = 'Zei1aeLuiedoo7EeNoop0veeOhneij3aOi0shuLeAipeiPh3ohZ5aa9fZequ5guz'
-    oUF.Tags[dummy_name] = [[ function() return end ]]
+    oUF.Tags.Methods[dummy_name] = [[ function() return end ]]
 
-    local func = oUF.Tags[dummy_name]
+    local func = oUF.Tags.Methods[dummy_name]
     _ENV = getfenv(func)
 
     -- remove the func
-    rawset(oUF.Tags, dummy_name, nil)
+    rawset(oUF.Tags.Methods, dummy_name, nil)
 end
 
 rawset(_ENV, 'Truncate', DDUF.TruncateNumber)
