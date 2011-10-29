@@ -5,11 +5,11 @@ local media = DDUF.media
 
 local _UNIT = 'focus'
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     self:SetSize(85, 85)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
     fore:SetAllPoints(self.FG)
 
@@ -25,7 +25,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     self.Textures[fore] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local bg = self.BG:CreateTexture(nil, 'BACKGROUND')
     bg:SetAllPoints(self.FG)
 
@@ -36,13 +36,13 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     self.Textures[bg] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local hp = CreateFrame('StatusBar', nil, self.BG)
     self.Health = hp
 
     hp:SetStatusBarTexture(media.roth)
-    hp:SetSize(63, 15)
-    hp:SetPoint('BOTTOM', self, 0, 5)
+    hp:SetSize(63, 11)
+    hp:SetPoint('BOTTOM', self, 0, 9)
 
     hp.colorClass = true
     hp.colorClassPet = true
@@ -54,7 +54,23 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     hp.bg.multiplier = .3
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
+    local pp = CreateFrame('StatusBar', nil, self.BG)
+    self.Power = pp
+
+    pp.SetStatusBarTexture(media.roth)
+    pp:SetSize(63, 4)
+    pp:SetPoint('BOTTOM', self, 0, 5)
+
+    pp.colorPower = true
+
+    pp.bg = pp:CreateTexture(nil, 'BORDER')
+    pp.bg:SetTexture(media.roth)
+    pp.bg:SetAllPoints()
+    pp.bg.multiplier = .3
+end)
+
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -64,7 +80,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     portrait:SetSize(_SIZE, _SIZE)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         fs:SetPoint('TOP', self, 'BOTTOM', 0, 6)

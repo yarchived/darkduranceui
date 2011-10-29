@@ -43,7 +43,7 @@ local function addStyle(name, func)
     table.insert(funcs, func)
 end
 
-function DDUF:RegsiterStyle(name, func)
+function DDUF:RegisterStyle(name, func)
     if(not func) then return end
 
     if(type(name) == 'table') then

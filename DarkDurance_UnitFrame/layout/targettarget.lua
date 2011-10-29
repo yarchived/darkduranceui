@@ -5,11 +5,11 @@ local media = DDUF.media
 
 local _UNIT = 'targettarget'
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     self:SetSize(150, 50)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
     fore:SetAllPoints(self.FG)
 
@@ -25,7 +25,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     self.Textures[fore] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local f = CreateFrame('Frame', nil, self.BG)
     f:SetSize(256, 128)
     f:SetPoint('CENTER', self, -4, 0)
@@ -41,7 +41,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     self.Textures[bg] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local hp = CreateFrame('StatusBar', nil, self.BG)
     self.Health = hp
 
@@ -60,7 +60,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     hp.bg.multiplier = .3
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -71,7 +71,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     portrait:SetSize(_SIZE, _SIZE)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
         fs:SetFont(media.font, 14, 'OUTLINE')
         fs:SetPoint('TOPLEFT', self, 'CENTER', -5, -12)

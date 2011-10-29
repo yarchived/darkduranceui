@@ -5,11 +5,11 @@ local media = DDUF.media
 
 local _UNIT = {'player', 'target'}
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     self:SetSize(270, 45)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
     local forground = self.FG:CreateTexture(nil, 'ARTWORK')
@@ -32,7 +32,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     self.Textures[forground] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
      local bg = self.BG:CreateTexture(nil, 'BACKGROUND')
      bg:SetAllPoints(self.FG)
      self.BG.Texture = bg
@@ -49,7 +49,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
      self.Textures[bg] = file
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
     local hp, mp
 
@@ -84,7 +84,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     mp.bg.multiplier = .3
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -96,7 +96,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     portrait:SetPoint(tar and 'BOTTOMRIGHT' or 'BOTTOMLEFT', self, tar and (0 - xoffset) or xoffset, 6)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
@@ -120,7 +120,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     end)
 end)
 
-DDUF:RegsiterStyle(_UNIT, function(self, unit)
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
     local castbar = CreateFrame('StatusBar', nil, self)
@@ -197,7 +197,7 @@ DDUF:RegsiterStyle(_UNIT, function(self, unit)
     end
 end)
 
-DDUF:RegsiterStyle('target', function(self, unit)
+DDUF:RegisterStyle('target', function(self, unit)
     local f = CreateFrame('Frame', nil, self)
     self.Auras = f
 
@@ -218,7 +218,7 @@ DDUF:RegsiterStyle('target', function(self, unit)
     end
 end)
 
-DDUF:RegsiterStyle('player', function(self, unit)
+DDUF:RegisterStyle('player', function(self, unit)
     self:RegisterEvent('PLAYER_TARGET_CHANGED', function()
         if(UnitExists'target') then
             if(UnitIsEnemy('player', 'target')) then
@@ -234,7 +234,7 @@ DDUF:RegsiterStyle('player', function(self, unit)
     end)
 end)
 
-DDUF:RegsiterStyle('player', function(self, unit)
+DDUF:RegisterStyle('player', function(self, unit)
     local threat_status = 1
     local fg_files = {
         media.player.player,
@@ -263,7 +263,7 @@ DDUF:RegsiterStyle('player', function(self, unit)
     table.insert(self.__elements, event_handler)
 end)
 
-DDUF:RegsiterStyle('target', function(self, unit)
+DDUF:RegisterStyle('target', function(self, unit)
     local fg_files = {
         elite = media.target.elite,
         rare = media.target.rare,
