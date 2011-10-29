@@ -41,8 +41,8 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.Health = hp
 
     hp:SetStatusBarTexture(media.roth)
-    hp:SetSize(63, 11)
-    hp:SetPoint('BOTTOM', self, 0, 9)
+    hp:SetSize(63, 9)
+    hp:SetPoint('BOTTOM', self, 0, 14)
 
     hp.colorClass = true
     hp.colorClassPet = true
@@ -58,9 +58,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     local pp = CreateFrame('StatusBar', nil, self.BG)
     self.Power = pp
 
-    pp.SetStatusBarTexture(media.roth)
-    pp:SetSize(63, 4)
-    pp:SetPoint('BOTTOM', self, 0, 5)
+    pp:SetStatusBarTexture(media.roth)
+    pp:SetSize(63, 3)
+    pp:SetPoint('TOP', self.Health, 'BOTTOM', 0, -1)
 
     pp.colorPower = true
 
