@@ -3,8 +3,8 @@
 
 ## OptionalDeps: oUF, !ClassColors
 
-## SavedVariables: DarkDuranceFrameDB
-## X-SavedVariables: DarkDuranceFrameDB
+## SavedVariables: DarkDuranceFramePositionDB
+## X-SavedVariables: DarkDuranceFramePositionDB
 ## X-SlashCmdList: /dd, /darkdurance
 
 ## X-oUF: DarkDurance_oUF
