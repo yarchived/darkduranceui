@@ -60,7 +60,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 
     pp:SetStatusBarTexture(media.roth)
     pp:SetSize(63, 3)
-    pp:SetPoint('TOP', self.Health, 'BOTTOM', 0, -1)
+    pp:SetPoint('TOP', self.Health, 'BOTTOM', 0, 0)
 
     pp.colorPower = true
 
