@@ -42,7 +42,7 @@ oUF.Tags.Methods['dd:smarthp'] = [[
             if(cur == max) then
                 return '|cff98c290' .. Truncate(max)
             else
-                local r, g, b = oUF.ColorGradient(cur, max, 245/255, 68/255, 68/255, 245/255, 186/255, 69/255, 105/255, 201/255, 105/255)
+                local r, g, b = ColorGradient(cur, max, 245/255, 68/255, 68/255, 245/255, 186/255, 69/255, 105/255, 201/255, 105/255)
                 local color = Hex(r, g, b)
                 return ('|cfffd5c69%s |cffdbf6db- %s%d%%|r'):format(Truncate(cur), color, floor(cur/max*100))
             end
