@@ -235,12 +235,13 @@ DDUF:RegisterStyle('player', function(self, unit)
 end)
 
 DDUF:RegisterStyle('player', function(self, unit)
-    local threat_status = 1
     local fg_files = {
         media.player.player,
         media.player.player_threat_low,
         media.player.player_threat_high,
     }
+    local default_status = 1
+    local threat_status_file
 
     local event_handler = function(self, event, unit)
         if(unit and unit ~= self.unit) then
@@ -248,13 +249,11 @@ DDUF:RegisterStyle('player', function(self, unit)
         end
 
         local status = UnitCanAttack(self.unit, 'target') and UnitThreatSituation(self.unit, 'target') or 1
-        if(status ~= 2 and status ~= 3) then
-            status = 1
-        end
+        local file = fg_files[status] or fg_files[default_status]
 
-        if(threat_status ~= status) then
-            threat_status = status
-            self.FG.Texture(media.getTexture(fg_files[status]))
+        if(threat_status_file ~= file) then
+            threat_status_file = file
+            self.FG.Texture:SetTexture(media.getTexture(file))
         end
     end
 

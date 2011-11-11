@@ -110,13 +110,13 @@ DDUF:Spawn(_UNIT, function()
         --'unitsPerColumn', 1,
         --'maxColumn', 5,
         'point', 'BOTTOM',
-        'yOffset', 10,
+        'yOffset', 20,
         'DDUF-width', 100,
         'DDUF-height', 40,
         'DDUF-scale', 1
     )
 
-    header:SetPoint('LEFT', UIParent,  15, 0)
+    header:SetPoint('LEFT', UIParent,  25, 0)
     header:Show()
     DDUF.units[_UNIT] = header
 end)
