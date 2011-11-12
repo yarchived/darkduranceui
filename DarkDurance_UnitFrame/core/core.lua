@@ -7,7 +7,7 @@ _NS[_NAME] = DDUF
 _G[_NAME] = DDUF
 _G.DDUF = DDUF
 
-
--- _NS.oUF = _NS.oUF or _G.oUF
+-- locate oUF
+_NS.oUF = _NS.oUF or _G.oUF
 
 
