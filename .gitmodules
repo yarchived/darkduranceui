@@ -1,6 +1,0 @@
-[submodule "DarkDurance_UnitFrame/vendor/oUF"]
-	path = DarkDurance_UnitFrame/vendor/oUF
-	url = git://github.com/haste/oUF.git
-[submodule "DarkDurance_UnitFrame/vendor/oUF_MovableFrames"]
-	path = DarkDurance_UnitFrame/vendor/oUF_MovableFrames
-	url = git://github.com/haste/oUF_MovableFrames.git
