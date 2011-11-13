@@ -53,7 +53,7 @@ oUF.Tags.Events['dd:smarthp'] = oUF.Tags.Events['missinghp']
 
 oUF.Tags.Methods['dd:realname'] = [[
     function(u, r)
-        lcoal name, realm = UnitName(r or u)
+        local name, realm = UnitName(r or u)
         if(realm) then
             name = name .. '-*'
         end
