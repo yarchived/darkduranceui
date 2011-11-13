@@ -1,7 +1,7 @@
 ## Interface: 40000
 ## Title: DarkDurance UnitFrame
 
-## OptionalDeps: !ClassColors
+## OptionalDeps: oUF, !ClassColors
 
 ## SavedVariables: DarkDuranceFramePositionDB
 ## X-SavedVariables: DarkDuranceFramePositionDB
