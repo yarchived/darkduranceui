@@ -9,6 +9,9 @@
 
 ## X-oUF: DarkDurance_oUF
 
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+
 vendor\oUF\oUF.xml
 vendor\oUF_MovableFrames\movable.lua
 
@@ -17,7 +20,6 @@ core\colors.lua
 core\media.lua
 core\utils.lua
 core\tags.lua
-core\layout.lua
 
 layout\core.lua
 layout\player.lua
