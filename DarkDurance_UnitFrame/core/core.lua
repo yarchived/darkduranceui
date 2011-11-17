@@ -40,8 +40,7 @@ local function styleFunc(self, ...)
 end
 
 function DDUF:RegisterStyle(name, func)
-    if(not func) then return end
-
+    if(type(func) ~= 'fucntion') then return end
     if(type(name) == 'table') then
         for _, n in next, name do
             self:RegisterStyle(n, func)
