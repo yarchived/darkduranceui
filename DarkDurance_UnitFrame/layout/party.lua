@@ -43,7 +43,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     hp.colorClassPet = true
     hp.colorClassNPC = true
 
-    hp:SetPoint('TOPLEFT', self, 'CENTER', -11, -6)
+    hp:SetPoint('TOPLEFT', self, 'CENTER', -11, -7)
 
     hp.bg = hp:CreateTexture(nil, 'BORDER')
     hp.bg:SetTexture(media.roth)
