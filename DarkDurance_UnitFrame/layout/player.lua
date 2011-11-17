@@ -306,6 +306,39 @@ DDUF:RegisterStyle('player', UNIT_CLASS=='DRUID' and function(self, unit)
     self.DruidMana = mana
 end)
 
+DDUF:RegisterStyle('player', UNIT_CLASS=='DEATHKNIGHT' and function(self, unit)
+    local BAR_HEIGHT = 6
+
+    local runes = CreateFrame('Frame', nil, self.Power)
+    runes:SetPoint('TOPLEFT', self.Power)
+    runes:SetPoint('TOPRIGHT', self.Power)
+    runes:SetHeight(BAR_HEIGHT)
+
+    local MAX_RUNES = 6
+    local GAP = 1
+    local bar_width = (self.Power:GetWidth() - GAP*(MAX_RUNES-1)) / MAX_RUNES
+
+    for i = 1, MAX_RUNES do
+        local bar = CreateFrame('StatusBar', nil, runes)
+        runes[i] = bar
+        bar:SetStatusBarTexture(media.roth)
+
+        bar.bg = bar:CreateTexture(nil, 'BORDER')
+        bar.bg:SetAllPoints(bar)
+        bar.bg:SetTexture(media.roth)
+        bar.bg.multiplier = .3
+
+        bar:SetWidth(bar_width)
+        bar:SetHeight(BAR_HEIGHT)
+        if(i == 1) then
+            bar:SetPoint('TOPLEFT', runes, 'TOPLEFT', 0, 0)
+        else
+            bar:SetPoint('TOPLEFT', runes[i-1], 'TOPRIGHT', GAP, 0)
+        end
+    end
+
+    self.Runes = runes
+end)
 
 DDUF:Spawn('player', function()
     local player = oUF:Spawn'player'
