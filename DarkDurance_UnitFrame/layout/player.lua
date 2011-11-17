@@ -4,6 +4,7 @@ local DDUF, oUF = _NS[_NAME], _NS.oUF
 local media = DDUF.media
 
 local _UNIT = {'player', 'target'}
+local UNIT_CLASS = select(2, UnitClass'player')
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
     self:SetSize(270, 45)
@@ -285,6 +286,26 @@ DDUF:RegisterStyle('target', function(self, unit)
     table.insert(self.__elements, handler)
     --self:RegisterEvent('PLAYER_TARGET_CHANGED', handler)
 end)
+
+DDUF:RegisterStyle('player', UNIT_CLASS=='DRUID' and function(self, unit)
+    local mana = CreateFrame('StatusBar', nil, self.Power)
+
+    mana:SetPoint('TOPLEFT', self.Power)
+    mana:SetPoint('TOPRIGHT', self.Power)
+    mana:SetStatusBarTexture(media.roth)
+    mana:SetHeight(6)
+
+    mana.bg = mana:CreateTexture(nil, 'BORDER')
+    mana.bg:SetAllPoints(mana)
+    mana.bg:SetTexture(media.roth)
+    mana.bg.multiplier = .3
+
+    mana.frequentUpdates = true
+    mana.colorPower = true
+
+    self.DruidMana = mana
+end)
+
 
 DDUF:Spawn('player', function()
     local player = oUF:Spawn'player'
