@@ -78,31 +78,29 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
-    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-        fs:SetPoint('LEFT', self, 'CENTER', 0, 8)
-    end)
+    self.Tags.name = self:CreateTag(self.Health,
+        '[raidcolor][dd:realname]', function(fs)
+            fs:SetFont(media.font, 14, 'OUTLINE')
+            fs:SetPoint('LEFT', self, 'CENTER', 0, 8)
+        end)
 
-    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
-        fs:SetFont(media.font, 20, 'OUTLINE')
-        fs:SetPoint('CENTER', self, -67, -21)
-    end)
+    self.Tags.level = self:CreateTag(self.FG,
+        '[dd:difficulty][level]', function(fs)
+            fs:SetFont(media.font, 20, 'OUTLINE')
+            fs:SetPoint('CENTER', self, -67, -21)
+        end)
 end)
 
 
 DDUF:Spawn(_UNIT, function()
-    local header = oUF:SpawnHeader(nil, nil, 'custom [group][@player,exists]show;hide',
+    local header = oUF:SpawnHeader(nil, nil,
+        'custom [group][@player,exists]show;hide',
         'oUF-initialConfigFunction', [[
             local unit = ...
             local header = self:GetParent()
             self:SetWidth(header:GetAttribute'DDUF-width')
             self:SetHeight(header:GetAttribute'DDUF-height')
             self:SetScale(header:GetAttribute'DDUF-scale')
-
-            local body = self:GetParent():GetAttribute'DDUF-partyCustomFunction'
-            if(body) then
-                self:Run(body, ...)
-            end
         ]],
         'showParty', true,
         --'showRaid', true,
