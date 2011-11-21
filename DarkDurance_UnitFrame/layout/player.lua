@@ -244,8 +244,8 @@ end)
 DDUF:RegisterStyle('player', function(self, unit)
     local fg_files = {
         media.player.player,
-        media.player.player_threat_low,
-        media.player.player_threat_high,
+        media.player.threat_low,
+        media.player.threat_high,
     }
     local default_status = 1
     local threat_status_file
@@ -255,8 +255,8 @@ DDUF:RegisterStyle('player', function(self, unit)
             return
         end
 
-        local status = UnitCanAttack(self.unit, 'target') and UnitThreatSituation(self.unit, 'target') or 1
-        local file = fg_files[status] or fg_files[default_status]
+        local status = UnitCanAttack(self.unit, 'target') and UnitThreatSituation(self.unit, 'target') or (UnitThreatSituation(self.unit))
+        local file = status and fg_files[status] or fg_files[default_status]
 
         if(threat_status_file ~= file) then
             threat_status_file = file
@@ -290,7 +290,6 @@ DDUF:RegisterStyle('target', function(self, unit)
     end
 
     table.insert(self.__elements, handler)
-    --self:RegisterEvent('PLAYER_TARGET_CHANGED', handler)
 end)
 
 DDUF:RegisterStyle('player', UNIT_CLASS=='DRUID' and function(self, unit)
