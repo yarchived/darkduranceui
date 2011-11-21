@@ -68,6 +68,25 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    local f = CreateFrame('Frame', nil, self)
+    self.Auras = f
+
+    f.size = 16
+    f.spacing = 2
+    f.gap = true
+    f.initialAnchor = 'TOPLEFT'
+    f['growth-x'] = 'RIGHT'
+    f['growth-y'] = 'DOWN'
+
+    local h = (f.size + f.spacing) * 10
+    local w = (f.size + f.spacing) * 1
+    f:SetSize(h, w)
+    f:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -5)
+
+    f.PostCreateIcon = DDUF.PostCreateIcon
+end)
+
+DDUF:RegisterStyle(_UNIT, function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 

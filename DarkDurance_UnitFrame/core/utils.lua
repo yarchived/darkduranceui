@@ -1,7 +1,8 @@
 
 local _NAME, _NS = ...
 
-DDUF = _NS[_NAME]
+local DDUF = _NS[_NAME]
+local media = DDUF.media
 
 DDUF.error = function(...)
 	DDUF.print('|cffff0000Error:|r '..string.format(...))
@@ -29,5 +30,15 @@ function DDUF.TruncateNumber(value)
         value = format('%.1fk', value / 1e3)
     end
     return gsub(value, '%.?0+([km])$', '%1')
+end
+
+DDUF.PostCreateIcon = function(icons, button)
+    button.icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
+    button.overlay:SetTexture(media.aura_overlay)
+    button.overlay:SetTexCoord(0, 1, 0, 1)
+    button.overlay:SetPoint('TOPLEFT', button, -1, 1)
+    button.overlay:SetPoint('BOTTOMRIGHT', button, 1, -1)
+    button.overlay.SetVertexColor = function() end
+    button.Hide = button.overlay.SetVertexColor
 end
 

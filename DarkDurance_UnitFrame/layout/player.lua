@@ -229,15 +229,7 @@ DDUF:RegisterStyle('target', function(self, unit)
     f:SetSize(h, w)
     f:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', 0, -10)
 
-    f.PostCreateIcon = function(icons, button)
-        button.icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
-        button.overlay:SetTexture(media.aura_overlay)
-        button.overlay:SetTexCoord(0, 1, 0, 1)
-        button.overlay:SetPoint('TOPLEFT', button, -1, 1)
-        button.overlay:SetPoint('BOTTOMRIGHT', button, 1, -1)
-        button.overlay.SetVertexColor = function() end
-        button.Hide = button.overlay.SetVertexColor
-    end
+    f.PostCreateIcon = DDUF.PostCreateIcon
 end)
 
 DDUF:RegisterStyle('player', function(self, unit)
@@ -362,13 +354,13 @@ end)
 
 DDUF:Spawn('player', function()
     local player = oUF:Spawn'player'
-    player:SetPoint('CENTER', -300, -200)
+    player:SetPoint('CENTER', -300, -100)
     DDUF.units.player = player
 end)
 
 DDUF:Spawn('target', function()
     local target = oUF:Spawn'target'
-    target:SetPoint('CENTER', 300, -200)
+    target:SetPoint('CENTER', 300, -100)
     DDUF.units.target = target
 end)
 
