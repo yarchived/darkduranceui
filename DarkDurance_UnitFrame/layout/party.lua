@@ -116,8 +116,7 @@ end)
 
 
 DDUF:Spawn(_UNIT, function()
-    local header = oUF:SpawnHeader(nil, nil,
-        'custom [group][@player,exists]show;hide',
+    local header = oUF:SpawnHeader(nil, nil, nil,
         'oUF-initialConfigFunction', [[
             local unit = ...
             local header = self:GetParent()
