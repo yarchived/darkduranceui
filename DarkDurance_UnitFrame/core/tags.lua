@@ -51,6 +51,14 @@ oUF.Tags.Methods['dd:smarthp'] = [[
 ]]
 oUF.Tags.Events['dd:smarthp'] = oUF.Tags.Events['missinghp']
 
+oUF.Tags.Methods['dd:pp'] = [[
+    function(u, r)
+        local color = _COLORS.power[select(2, UnitPowerType(u))]
+        return Hex(color) .. Truncate(UnitPower(u))
+    end
+]]
+oUF.Tags.Events['dd:pp'] = oUF.Tags.Events.curpp
+
 oUF.Tags.Methods['dd:realname'] = [[
     function(u, r)
         local name, realm = UnitName(r or u)

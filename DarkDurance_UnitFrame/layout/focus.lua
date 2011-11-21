@@ -87,7 +87,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     end)
 
     self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
-        fs:SetFont(media.font, 20, 'OUTLINE')
+        fs:SetFont(media.font, 14, 'OUTLINE')
         fs:SetPoint('CENTER', self, 28, -13)
     end)
 end)

@@ -107,7 +107,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     end)
 
     self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
-        fs:SetFont(media.font, 20, 'OUTLINE')
+        fs:SetFont(media.font, 14, 'OUTLINE')
         if(tar) then
             fs:SetPoint('CENTER', self, 'BOTTOMRIGHT', -38, 13)
         else
@@ -116,8 +116,23 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     end)
 
     self.Tags.hp = self:CreateTag(self.FG, '[dd:smarthp]', function(fs)
-        fs:SetFont(media.font, 20, 'OUTLINE')
-        fs:SetPoint('CENTER', self.Health)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+        local off = 10
+        if(tar) then
+            fs:SetPoint('RIGHT', self.Health, -off, 0)
+        else
+            fs:SetPoint('LEFT', self.Health, off, 0)
+        end
+    end)
+
+    self.Tags.pp = self:CreateTag(self.FG, '[dd:pp]', function(fs)
+        fs:SetFont(media.font, 14, 'OUTLINE')
+        local off = 10
+        if(tar) then
+            fs:SetPoint('LEFT', self.Health, off, 0)
+        else
+            fs:SetPoint('RIGHT', self.Health, -off, 0)
+        end
     end)
 end)
 
