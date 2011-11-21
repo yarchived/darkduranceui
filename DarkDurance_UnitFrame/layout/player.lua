@@ -216,6 +216,12 @@ DDUF:RegisterStyle('target', function(self, unit)
 
     f.PostCreateIcon = function(icons, button)
         button.icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
+        button.overlay:SetTexture(media.aura_overlay)
+        button.overlay:SetTexCoord(0, 1, 0, 1)
+        button.overlay:SetPoint('TOPLEFT', button, -1, 1)
+        button.overlay:SetPoint('BOTTOMRIGHT', button, 1, -1)
+        button.overlay.SetVertexColor = function() end
+        button.Hide = button.overlay.SetVertexColor
     end
 end)
 

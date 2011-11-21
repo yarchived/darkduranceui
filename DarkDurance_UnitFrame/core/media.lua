@@ -22,6 +22,7 @@ end
 
 media.dd = [[Interface\Addons\]] .. _NAME .. [[\media\dd]]
 media.roth = [[Interface\Addons\]] .. _NAME .. [[\media\roth]]
+media.aura_overlay = [[Interface\AddOns\]].. _NAME ..[[\media\SmartName]]
 
 media.castbar = {
     castbar = 'castbar',
