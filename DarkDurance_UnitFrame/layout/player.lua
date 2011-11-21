@@ -169,7 +169,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 
     local text = castbar:CreateFontString(nil, 'ARTWORK')
     castbar.Text = text
-    text:SetFont(media.font, 12, 'OUTLINE')
+    text:SetFont(media.font, 8, 'OUTLINE')
     local xoffset = 5
     if(tar) then
         text:SetPoint('RIGHT', castbar, 0 - xoffset)
