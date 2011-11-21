@@ -73,13 +73,17 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 
     f.size = 16
     f.spacing = 2
-    f.gap = true
+    --f.gap = true
     f.initialAnchor = 'TOPLEFT'
     f['growth-x'] = 'RIGHT'
     f['growth-y'] = 'DOWN'
 
     local h = (f.size + f.spacing) * 10
     local w = (f.size + f.spacing) * 1
+
+    f.numBuffs = 4
+    f.numDebuffs = 6
+
     f:SetSize(h, w)
     f:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -5)
 
@@ -123,11 +127,11 @@ DDUF:Spawn(_UNIT, function()
         ]],
         'showParty', true,
         --'showRaid', true,
-        'showSolo', true,
+        --'showSolo', true,
         --'unitsPerColumn', 1,
         --'maxColumn', 5,
         'point', 'BOTTOM',
-        'yOffset', 20,
+        'yOffset', 25,
         'DDUF-width', 100,
         'DDUF-height', 40,
         'DDUF-scale', 1
