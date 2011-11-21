@@ -18,6 +18,8 @@ core\media.lua
 core\utils.lua
 core\tags.lua
 
+layout\templates.xml
+
 layout\core.lua
 layout\player.lua
 layout\targettarget.lua

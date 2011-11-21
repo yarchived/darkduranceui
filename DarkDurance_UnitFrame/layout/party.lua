@@ -117,23 +117,34 @@ end)
 
 DDUF:Spawn(_UNIT, function()
     local header = oUF:SpawnHeader(nil, nil, nil,
-        'oUF-initialConfigFunction', [[
-            local unit = ...
+            'oUF-initialConfigFunction', [=[
             local header = self:GetParent()
-            self:SetWidth(header:GetAttribute'DDUF-width')
-            self:SetHeight(header:GetAttribute'DDUF-height')
-            self:SetScale(header:GetAttribute'DDUF-scale')
-        ]],
+            if(self:GetAttribute'unitsuffix' == 'target') then
+                local header = header:GetParent()
+                self:SetWidth(header:GetAttribute'DDUF-target-width')
+                self:SetHeight(header:GetAttribute'DDUF-target-height')
+                self:SetScale(header:GetAttribute'DDUF-target-scale')
+            else
+                self:SetWidth(header:GetAttribute'DDUF-width')
+                self:SetHeight(header:GetAttribute'DDUF-height')
+                self:SetScale(header:GetAttribute'DDUF-scale')
+            end
+        ]=],
+        'template', 'DarkDuranceUF_PartyTargetTemplate',
         'showParty', true,
         --'showRaid', true,
-        --'showSolo', true,
+        'showPlayer', true,
+        'showSolo', true,
         --'unitsPerColumn', 1,
         --'maxColumn', 5,
         'point', 'BOTTOM',
         'yOffset', 25,
         'DDUF-width', 100,
         'DDUF-height', 40,
-        'DDUF-scale', 1
+        'DDUF-scale', 1,
+        'DDUF-target-width', 100,
+        'DDUF-target-height', 40,
+        'DDUF-target-scale', 1
     )
 
     header:SetPoint('LEFT', UIParent,  25, 0)
