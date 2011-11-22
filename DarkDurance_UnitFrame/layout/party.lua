@@ -6,7 +6,12 @@ local media = DDUF.media
 
 local _UNIT = 'party'
 
+local function is_party(self)
+    return not self:GetAttribute'unitsuffix'
+end
+
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
     fore:SetAllPoints()
 
@@ -23,6 +28,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local bg = self.BG:CreateTexture(nil, 'BORDER')
     bg:SetAllPoints(self.FG)
 
@@ -33,6 +39,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local hp = CreateFrame('StatusBar', nil, self.BG)
     self.Health = hp
 
@@ -52,6 +59,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local pp = CreateFrame('StatusBar', nil, self.BG)
     self.Power = pp
 
@@ -68,6 +76,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local f = CreateFrame('Frame', nil, self)
     self.Auras = f
 
@@ -91,6 +100,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -101,6 +111,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(not is_party(self)) then return end
     self.Tags.name = self:CreateTag(self.Health,
         '[raidcolor][dd:realname]', function(fs)
             fs:SetFont(media.font, 14, 'OUTLINE')
@@ -112,6 +123,12 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
             fs:SetFont(media.font, 14, 'OUTLINE')
             fs:SetPoint('CENTER', self, -67, -21)
         end)
+end)
+
+DDUF:RegisterStyle(_UNIT, function(self, unit)
+    if(is_party(self)) then return end
+
+
 end)
 
 
