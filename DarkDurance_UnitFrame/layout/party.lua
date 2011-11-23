@@ -150,7 +150,7 @@ DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
 
     hp:SetPoint'CENTER'
     hp:SetStatusBarTexture(media.roth)
-    hp:SetSize(60, 14)
+    hp:SetSize(60, 12)
 
     hp.colorClass = true
     hp.colorClassPet = true
