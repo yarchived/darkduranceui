@@ -82,8 +82,8 @@ end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-        fs:SetPoint('TOP', self, 'BOTTOM', 0, 6)
+        fs:SetFont(media.font, 12, 'OUTLINE')
+        fs:SetPoint('TOP', self, 'BOTTOM', 0, 3)
     end)
 
     self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)

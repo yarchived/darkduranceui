@@ -86,7 +86,7 @@ end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][name]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
+        fs:SetFont(media.font, 12, 'OUTLINE')
         fs:SetPoint('TOPRIGHT', self, 'CENTER', 5, -13)
     end)
 

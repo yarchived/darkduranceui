@@ -6,12 +6,21 @@ local media = DDUF.media
 
 local _UNIT = 'party'
 
-local function is_party(self)
-    return not self:GetAttribute'unitsuffix'
+local function create_wrapper_for(unit, func)
+    return function(self, ...)
+        return self:GetAttribute'unitsuffix' == unit and func(self, ...)
+    end
 end
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+local wrap_party = function(func)
+    return create_wrapper_for(nil, func)
+end
+
+local wrap_target = function(func)
+    return create_wrapper_for('target', func)
+end
+
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local fore = self.FG:CreateTexture(nil, 'ARTWORK')
     fore:SetAllPoints()
 
@@ -25,10 +34,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 
     self.FG.Texture = fore
     self.Textures[fore] = file
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local bg = self.BG:CreateTexture(nil, 'BORDER')
     bg:SetAllPoints(self.FG)
 
@@ -36,10 +44,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     bg:SetTexture(media.getTexture(file))
     self.BG.Texture = bg
     self.Textures[bg] = bg
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local hp = CreateFrame('StatusBar', nil, self.BG)
     self.Health = hp
 
@@ -56,10 +63,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     hp.bg:SetTexture(media.roth)
     hp.bg:SetAllPoints()
     hp.bg.multiplier = .3
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local pp = CreateFrame('StatusBar', nil, self.BG)
     self.Power = pp
 
@@ -73,10 +79,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     pp.bg:SetTexture(media.roth)
     pp.bg:SetAllPoints()
     pp.bg.multiplier = .3
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local f = CreateFrame('Frame', nil, self)
     self.Auras = f
 
@@ -97,10 +102,9 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     f:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -5)
 
     f.PostCreateIcon = DDUF.PostCreateIcon
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     local portrait = CreateFrame('PlayerModel', nil, self.BG)
     self.Portrait = portrait
 
@@ -108,14 +112,13 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
 
     local _SIZE = 35
     portrait:SetSize(_SIZE, _SIZE)
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(not is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     self.Tags.name = self:CreateTag(self.Health,
         '[raidcolor][dd:realname]', function(fs)
-            fs:SetFont(media.font, 14, 'OUTLINE')
-            fs:SetPoint('LEFT', self, 'CENTER', 0, 8)
+            fs:SetFont(media.font, 12, 'OUTLINE')
+            fs:SetPoint('LEFT', self, 'CENTER', 0, 5)
         end)
 
     self.Tags.level = self:CreateTag(self.FG,
@@ -123,28 +126,64 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
             fs:SetFont(media.font, 14, 'OUTLINE')
             fs:SetPoint('CENTER', self, -67, -21)
         end)
-end)
+end))
 
-DDUF:RegisterStyle(_UNIT, function(self, unit)
-    if(is_party(self)) then return end
+DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
+    self.FG:ClearAllPoints()
+    self.FG:SetPoint('CENTER', self)
+    self.FG:SetSize(256, 64)
+    self.FG:SetScale(.7)
 
+    local bg = self.BG:CreateTexture(nil, 'BACKGROUND')
+    bg:SetAllPoints(self.FG)
 
-end)
+    local file = media.tot.totot
+    bg:SetTexture(media.getTexture(file))
 
+    self.BG.Texture = bg
+    self.Textures[bg] = file
+end))
+
+DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
+    local hp = CreateFrame('StatusBar', nil, self.BG)
+    self.Health = hp
+
+    hp:SetPoint'CENTER'
+    hp:SetStatusBarTexture(media.roth)
+    hp:SetSize(60, 14)
+
+    hp.colorClass = true
+    hp.colorClassPet = true
+    hp.colorClassNPC = true
+
+    hp.bg = hp:CreateTexture(nil, 'BORDER')
+    hp.bg:SetTexture(media.roth)
+    hp.bg:SetAllPoints()
+    hp.bg.multiplier = .3
+end))
+
+DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
+    self.Tags.name = self:CreateTag(self.Health,
+        '[raidcolor][dd:realname]', function(fs)
+            fs:SetFont(media.font, 12, 'OUTLINE')
+            fs:SetPoint('CENTER', self, 0, 18)
+        end)
+end))
 
 DDUF:Spawn(_UNIT, function()
     local header = oUF:SpawnHeader(nil, nil, nil,
-            'oUF-initialConfigFunction', [=[
+        'oUF-initialConfigFunction', [=[
             local header = self:GetParent()
             if(self:GetAttribute'unitsuffix' == 'target') then
                 local header = header:GetParent()
-                self:SetWidth(header:GetAttribute'DDUF-target-width')
+
+                self:SetWidth( header:GetAttribute'DDUF-target-width')
                 self:SetHeight(header:GetAttribute'DDUF-target-height')
-                self:SetScale(header:GetAttribute'DDUF-target-scale')
+                self:SetScale( header:GetAttribute'DDUF-target-scale')
             else
-                self:SetWidth(header:GetAttribute'DDUF-width')
+                self:SetWidth( header:GetAttribute'DDUF-width')
                 self:SetHeight(header:GetAttribute'DDUF-height')
-                self:SetScale(header:GetAttribute'DDUF-scale')
+                self:SetScale( header:GetAttribute'DDUF-scale')
             end
         ]=],
         'template', 'DarkDuranceUF_PartyTargetTemplate',
@@ -159,8 +198,8 @@ DDUF:Spawn(_UNIT, function()
         'DDUF-width', 100,
         'DDUF-height', 40,
         'DDUF-scale', 1,
-        'DDUF-target-width', 100,
-        'DDUF-target-height', 40,
+        'DDUF-target-width', 76,
+        'DDUF-target-height', 18,
         'DDUF-target-scale', 1
     )
 

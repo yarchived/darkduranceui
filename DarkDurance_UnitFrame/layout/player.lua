@@ -101,7 +101,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
     self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
+        fs:SetFont(media.font, 12, 'OUTLINE')
         local xoffset = 100
         fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
     end)
