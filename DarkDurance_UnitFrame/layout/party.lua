@@ -116,16 +116,16 @@ end))
 
 DDUF:RegisterStyle(_UNIT, wrap_party(function(self, unit)
     self.Tags.name = self:CreateTag(self.Health,
-        '[raidcolor][dd:realname]', function(fs)
-            fs:SetFont(media.font, 12, 'OUTLINE')
-            fs:SetPoint('LEFT', self, 'CENTER', 0, 5)
-        end)
+    '[raidcolor][dd:realname]')
+    :SetFont(media.font, 12, 'OUTLINE')
+    :SetPoint('LEFT', self, 'CENTER', 0, 5)
+    :done()
 
     self.Tags.level = self:CreateTag(self.FG,
-        '[dd:difficulty][level]', function(fs)
-            fs:SetFont(media.font, 14, 'OUTLINE')
-            fs:SetPoint('CENTER', self, -67, -21)
-        end)
+    '[dd:difficulty][level]')
+    :SetFont(media.font, 14, 'OUTLINE')
+    :SetPoint('CENTER', self, -67, -21)
+    :done()
 end))
 
 DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
@@ -164,10 +164,10 @@ end))
 
 DDUF:RegisterStyle(_UNIT, wrap_target(function(self, unit)
     self.Tags.name = self:CreateTag(self.Health,
-        '[raidcolor][dd:realname]', function(fs)
-            fs:SetFont(media.font, 12, 'OUTLINE')
-            fs:SetPoint('CENTER', self, 0, 18)
-        end)
+    '[raidcolor][dd:realname]')
+    :SetFont(media.font, 12, 'OUTLINE')
+    :SetPoint('CENTER', self, 0, 18)
+    :done()
 end))
 
 DDUF:Spawn(_UNIT, function()
