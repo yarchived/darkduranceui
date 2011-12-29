@@ -85,9 +85,10 @@ proxy = setmetatable({}, {
 })
 
 -- better tag api
-function CreateTag(self, region, tagstr, call)
+function CreateTag(self, region, tagstr)
+    print(tagstr)
     if(type(region) == 'string') then
-        region, tagstr, call = self, region, tagstr
+        region, tagstr = self, region
     end
 
     local fs = region:CreateFontString(nil, 'OVERLAY')

@@ -100,40 +100,31 @@ end)
 DDUF:RegisterStyle(_UNIT, function(self, unit)
     local tar = unit == 'target'
 
-    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]', function(fs)
-        fs:SetFont(media.font, 12, 'OUTLINE')
-        local xoffset = 100
-        fs:SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
-    end)
+    local xoffset = 100
+    self.Tags.name = self:CreateTag(self.Health, '[raidcolor][dd:realname]')
+    :SetFont(media.font, 12, 'OUTLINE')
+    :SetPoint(tar and 'RIGHT' or 'LEFT', self, tar and (0-xoffset) or xoffset, 25)
+    :done()
 
-    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-        if(tar) then
-            fs:SetPoint('CENTER', self, 'BOTTOMRIGHT', -38, 13)
-        else
-            fs:SetPoint('CENTER', self, 'TOPLEFT', 46, -1)
-        end
-    end)
+    self.Tags.level = self:CreateTag(self.FG, '[dd:difficulty][level]')
+    :SetFont(media.font, 14, 'OUTLINE')
+    :SetPoint('CENTER', self, tar and 'BOTTOMRIGHT' or 'TOPLEFT',
+    tar and -38 or 46, tar and 13 or -1)
+    :done()
 
-    self.Tags.hp = self:CreateTag(self.FG, '[dd:smarthp]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-        local off = 10
-        if(tar) then
-            fs:SetPoint('RIGHT', self.Health, -off, 0)
-        else
-            fs:SetPoint('LEFT', self.Health, off, 0)
-        end
-    end)
+    local off = 10
+    self.Tags.hp = self:CreateTag(self.FG, '[dd:smarthp]')
+    :SetFont(media.font, 14, 'OUTLINE')
+    :SetPoint(tar and 'RIGHT' or 'LEFT', self.Health,
+    tar and -off or off, 0)
+    :done()
 
-    self.Tags.pp = self:CreateTag(self.FG, '[dd:pp]', function(fs)
-        fs:SetFont(media.font, 14, 'OUTLINE')
-        local off = 10
-        if(tar) then
-            fs:SetPoint('LEFT', self.Health, off, 0)
-        else
-            fs:SetPoint('RIGHT', self.Health, -off, 0)
-        end
-    end)
+    local off = 10
+    self.Tags.pp = self:CreateTag(self.FG, '[dd:pp]')
+    :SetFont(media.font, 14, 'OUTLINE')
+    :SetPoint(tar and 'LEFT' or 'RIGHT', self.Health,
+    tar and off or -off, 0)
+    :done()
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
