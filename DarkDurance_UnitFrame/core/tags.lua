@@ -2,20 +2,6 @@
 local _NAME, _NS = ...
 local DDUF, oUF = _NS[_NAME], _NS.oUF
 
--- better tag api
-function CreateTag(self, region, tagstr, call)
-    if(type(region) == 'string') then
-        region, tagstr, call = self, region, tagstr
-    end
-
-    local fs = region:CreateFontString(nil, 'OVERLAY')
-    call(fs)
-    self:Tag(fs, tagstr)
-
-    return fs
-end
-
-oUF:RegisterMetaFunction('CreateTag', CreateTag)
 
 oUF.Tags.Methods['dd:difficulty'] = [[
 function(u)
@@ -69,20 +55,48 @@ oUF.Tags.Methods['dd:realname'] = [[
     end
 ]]
 
--- hook into `_ENV' in tags.lua
--- but `_ENV' is a metatable, we need to call `rawget' and `rawset'
--- to manipulate it.
-local _ENV
 do
-    local dummy_name = 'Zei1aeLuiedoo7EeNoop0veeOhneij3aOi0shuLeAipeiPh3ohZ5aa9fZequ5guz'
-    oUF.Tags.Methods[dummy_name] = [[ function() return end ]]
-
-    local func = oUF.Tags.Methods[dummy_name]
-    _ENV = getfenv(func)
-
-    -- remove the func
-    rawset(oUF.Tags.Methods, dummy_name, nil)
+    local _ENV = getfenv(oUF.Tags.Methods.level)
+    rawset(_ENV, 'Truncate', DDUF.TruncateNumber)
 end
 
-rawset(_ENV, 'Truncate', DDUF.TruncateNumber)
+
+local instance, func, proxyfunc, proxy
+
+local done = function()
+    return instance
+end
+
+proxyfunc = function(self, ...)
+    func(instance, ...)
+    return proxy
+end
+
+proxy = setmetatable({}, {
+    __index = function(self, key)
+        print(key)
+        if(key == 'done') then
+            return done
+        else
+            func = instance[key]
+            return proxyfunc
+        end
+    end,
+})
+
+-- better tag api
+function CreateTag(self, region, tagstr, call)
+    if(type(region) == 'string') then
+        region, tagstr, call = self, region, tagstr
+    end
+
+    local fs = region:CreateFontString(nil, 'OVERLAY')
+    self:Tag(fs, tagstr)
+
+    instance = fs
+
+    return proxy
+end
+
+oUF:RegisterMetaFunction('CreateTag', CreateTag)
 
