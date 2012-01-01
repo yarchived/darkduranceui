@@ -74,7 +74,6 @@ end
 
 proxy = setmetatable({}, {
     __index = function(self, key)
-        print(key)
         if(key == 'done') then
             return done
         else
@@ -86,7 +85,6 @@ proxy = setmetatable({}, {
 
 -- better tag api
 function CreateTag(self, region, tagstr)
-    print(tagstr)
     if(type(region) == 'string') then
         region, tagstr = self, region
     end
