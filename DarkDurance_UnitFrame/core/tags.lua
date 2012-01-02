@@ -63,23 +63,19 @@ end
 
 local instance, func, proxyfunc, proxy
 
-local done = function()
-    return instance
-end
-
 proxyfunc = function(self, ...)
     func(instance, ...)
     return proxy
 end
 
-proxy = setmetatable({}, {
+proxy = setmetatable({
+    done = function()
+        return instance
+    end,
+}, {
     __index = function(self, key)
-        if(key == 'done') then
-            return done
-        else
-            func = instance[key]
-            return proxyfunc
-        end
+        func = instance[key]
+        return proxyfunc
     end,
 })
 
