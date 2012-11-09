@@ -343,15 +343,11 @@ DDUF:RegisterStyle('player', UNIT_CLASS=='DEATHKNIGHT' and function(self, unit)
     self.Runes = runes
 end)
 
-DDUF:Spawn('player', function()
-    local player = oUF:Spawn'player'
-    player:SetPoint('CENTER', -300, -100)
-    DDUF.units.player = player
+DDUF:Spawn('player', function(f)
+    f:SetPoint('CENTER', -300, -100)
 end)
 
-DDUF:Spawn('target', function()
-    local target = oUF:Spawn'target'
-    target:SetPoint('CENTER', 300, -100)
-    DDUF.units.target = target
+DDUF:Spawn('target', function(f)
+    f:SetPoint('CENTER', 300, -100)
 end)
 

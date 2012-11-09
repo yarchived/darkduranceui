@@ -4,6 +4,8 @@ local _NAME, _NS = ...
 local DDUF = _NS[_NAME]
 local media = DDUF.media
 
+local proxy = {}
+
 DDUF.error = function(...)
 	DDUF.print('|cffff0000Error:|r '..string.format(...))
 end

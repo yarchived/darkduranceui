@@ -67,10 +67,32 @@ function DDUF:RegsiterCommonStyle(func)
     self:RegisterStyle(common_style, func)
 end
 
-function DDUF:Spawn(name, func)
-    oUF:Factory(function()
-        oUF:SetActiveStyle(style_names[name])
-        func()
-    end)
+function DDUF:Spawn(args, func)
+    local name
+    if(type(args) == 'table') then
+        name = args[1]
+    else
+        name = args
+    end
+
+    oUF:SetActiveStyle(style_names[name])
+    local object
+    if(type(args) == 'table') then
+        object = oUF:Spawn(unpack(args))
+    else
+        -- no args in
+        object = oUF:Spawn(name)
+    end
+
+    DDUF.units[name] = object
+    return func(object)
+end
+
+
+function DDUF:SpawnHeader(name, func, ...)
+    oUF:SetActiveStyle(style_names[name])
+    local object = oUF:SpawnHeader(...)
+    DDUF.units[name] = object
+    return func(object)
 end
 

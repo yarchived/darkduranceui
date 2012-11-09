@@ -83,9 +83,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     :done()
 end)
 
-DDUF:Spawn(_UNIT, function()
-    local f = oUF:Spawn(_UNIT)
+DDUF:Spawn(_UNIT, function(f)
     f:SetPoint('TOPLEFT', DDUF.units.target, 'BOTTOMLEFT', -35, 15)
-    DDUF.units[_UNIT] = f
 end)
 

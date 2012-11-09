@@ -92,9 +92,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     :done()
 end)
 
-DDUF:Spawn(_UNIT, function()
-    local f = oUF:Spawn(_UNIT)
+DDUF:Spawn(_UNIT, function(f)
     f:SetPoint('CENTER', -300, 0)
-    DDUF.units[_UNIT] = f
 end)
 
