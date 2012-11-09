@@ -4,10 +4,10 @@ local DDUF, oUF = _NS[_NAME], _NS.oUF
 
 
 oUF.Tags.Methods['dd:difficulty'] = [[
-function(u)
-    local l = UnitLevel(u)
-    return Hex(GetQuestDifficultyColor((l > 0) and l or 99))
-end
+    function(u)
+        local l = UnitLevel(u)
+        return Hex(GetQuestDifficultyColor((l > 0) and l or 99))
+    end
 ]]
 
 oUF.Tags.Methods['dd:smarthp'] = [[
