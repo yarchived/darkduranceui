@@ -20,9 +20,11 @@ media.getTexture = function(file, style)
     return media.basepath:format(style, file)
 end
 
-media.dd = [[Interface\Addons\]] .. _NAME .. [[\media\dd]]
-media.roth = [[Interface\Addons\]] .. _NAME .. [[\media\roth]]
-media.aura_overlay = [[Interface\AddOns\]].. _NAME ..[[\media\SmartName]]
+local MEDIAPATH = [[Interface\AddOns\]].. _NAME ..[[\media\]]
+
+media.dd = MEDIAPATH..'dd'
+media.roth = MEDIAPATH..'roth'
+media.aura_overlay = MEDIAPATH..'SmartName'
 
 media.castbar = {
     castbar = 'castbar',
@@ -68,5 +70,4 @@ media.icon = {
     leader = 'leader',
     combat = 'sword',
 }
-
 
