@@ -27,7 +27,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     local file = tar and media.target.target or media.player.player
     forground:SetTexture(media.getTexture(file))
     if(tar) then
-        DDUF:FlipTexture(forground)
+        DDUF.FlipTexture(forground)
     end
 
     self.Textures[forground] = file
@@ -44,7 +44,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
      local file = media[tar and 'target' or 'player'].bg
      bg:SetTexture(media.getTexture(file))
      if(tar) then
-         DDUF:FlipTexture(bg)
+         DDUF.FlipTexture(bg)
      end
 
      self.Textures[bg] = file
@@ -169,8 +169,8 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     castbar.FG = fg
     castbar.BG = bg
     if(tar) then
-        DDUF:FlipTexture(fg.Texture)
-        DDUF:FlipTexture(bg.Texture)
+        DDUF.FlipTexture(fg.Texture)
+        DDUF.FlipTexture(bg.Texture)
     end
 
     local text = castbar:CreateFontString(nil, 'ARTWORK')

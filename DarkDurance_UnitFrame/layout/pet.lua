@@ -23,7 +23,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.FG.Texture = fore
     self.Textures[fore] = file
 
-    DDUF:FlipTexture(fore)
+    DDUF.FlipTexture(fore)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
@@ -36,7 +36,7 @@ DDUF:RegisterStyle(_UNIT, function(self, unit)
     self.BG.Texture = bg
     self.Textures[bg] = file
 
-    DDUF:FlipTexture(bg)
+    DDUF.FlipTexture(bg)
 end)
 
 DDUF:RegisterStyle(_UNIT, function(self, unit)
