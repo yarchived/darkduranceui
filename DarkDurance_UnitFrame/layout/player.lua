@@ -343,6 +343,52 @@ DDUF:RegisterStyle('player', UNIT_CLASS=='DEATHKNIGHT' and function(self, unit)
     self.Runes = runes
 end)
 
+DDUF:RegisterStyle('player', (UNIT_CLASS == 'MONK' or 
+UNIT_CLASS == 'PALADIN' or
+UNIT_CLASS == 'PRIEST' or
+UNIT_CLASS == 'WARLOCK') and
+function(self, unit)
+    local cicons = {}
+    for i = 1, 5 do
+        local f = self.Health:CreateTexture(nil, 'OVERLAY')
+        cicons[i] = f
+        f:SetSize(8, 8)
+        f:SetTexture(media.bubbleTex)
+        if(i == 1) then
+            f:SetPoint('TOPRIGHT', self, -35, 3)
+        else
+            f:setPoint('LEFT', cicons[i-1], 'RIGHT', 1)
+        end
+        f:SetVertexColor(.33, .59, .33)
+    end
+
+    self.ClassIcons = cicons
+end)
+
+DDUF:RegisterStyle('target', function(self, unit)
+    local cpoints = {}
+    for i = 1, 5 do
+        local f = self.Power:CreateTexture(nil, 'OVERLAY')
+        cpoints[i] = f
+        f:SetSize(8, 8)
+        f:SetTexture(media.bubbleTex)
+        if(i == 1) then
+            f:SetPoint('BOTTOMLEFT', 1, 0)
+        else
+            f:SetPoint('LEFT', cpoints[i-1], 'RIGHT', 1, 0)
+        end
+    end
+
+    cpoints[1]:SetVertexColor(.69, .31, .31)
+    cpoints[2]:SetVertexColor(.69, .31, .31)
+    cpoints[3]:SetVertexColor(.65, .63, .35)
+    cpoints[4]:SetVertexColor(.65, .63, .35)
+    cpoints[5]:SetVertexColor(.33, .59, .33)
+
+    self.CPoints = cpoints
+end)
+
+
 DDUF:Spawn('player', function(f)
     f:SetPoint('CENTER', -300, -100)
 end)

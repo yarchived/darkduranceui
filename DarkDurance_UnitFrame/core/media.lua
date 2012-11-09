@@ -12,19 +12,18 @@ media.backdrop = {
     insets = { top=-1, left=-1, bottom=-1, right=-1 },
 }
 
-media.basepath = 'Interface\\AddOns\\'.._NAME..'\\media\\%s\\%s'
+local MEDIAPATH = [[Interface\AddOns\]].. _NAME ..[[\media\]]
 
 media.getTexture = function(file, style)
     style = style or 'origin'
-
-    return media.basepath:format(style, file)
+    return MEDIAPATH .. ([[%s\%s]]):format(style, file)
 end
 
-local MEDIAPATH = [[Interface\AddOns\]].. _NAME ..[[\media\]]
 
 media.dd = MEDIAPATH..'dd'
 media.roth = MEDIAPATH..'roth'
 media.aura_overlay = MEDIAPATH..'SmartName'
+media.bubbleTex = MEDIAPATH..'bubbleTex'
 
 media.castbar = {
     castbar = 'castbar',
